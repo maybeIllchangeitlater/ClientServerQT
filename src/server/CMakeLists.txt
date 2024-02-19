@@ -21,11 +21,14 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
         server/server.h
-        http/response.h
-        http/statusMessage.h
-        http/header.h
-        enums/statusCode.h
-        enums/contentType.h
+        ../common/http/request.h
+        ../common/http/response.h
+        ../common/http/statusMessage.h
+        ../common/http/requestString.h
+        ../common/http/header.h
+        ../common/enums/statusCode.h
+        ../common/enums/requestMethod.h
+        ../common/enums/contentType.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

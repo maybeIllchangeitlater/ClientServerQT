@@ -8,10 +8,10 @@
 #include <QByteArray>
 #include <QUrl>
 #include <QMap>
-#include "../http/response.h"
-#include "../http/statusMessage.h"
-#include "../http/header.h"
-#include "../enums/contentType.h"
+#include "../../common/http/response.h"
+#include "../../common/http/statusMessage.h"
+#include "../../common/http/header.h"
+#include "../../common/enums/contentType.h"
 
 
 namespace test {
