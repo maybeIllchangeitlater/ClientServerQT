@@ -22,6 +22,7 @@ set(PROJECT_SOURCES
         mainwindow.ui
         client/client.h
         client/client.cpp
+        randomStringGenerator/randomStringGenerator.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
