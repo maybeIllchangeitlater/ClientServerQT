@@ -64,7 +64,7 @@ class Data {
     json["id"] = _id;
     json["number"] = _number;
     json["date"] = _date;
-    json["time"] = &time;
+    json["time"] = _time;
     return json;
   }
   /**

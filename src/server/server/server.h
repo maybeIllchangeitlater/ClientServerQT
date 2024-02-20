@@ -48,7 +48,7 @@ private:
         if (requestData.contains("/text-data")) {
             _stringController.postString(requestData);
         } else if (requestData.contains("structured-data")) {
-//            _jsonController.postJson(requestData);
+            _jsonController.postJson(requestData);
         } else if (requestData.contains("GET")){
             qDebug() << "string count: " << _stringController.getStringCount();
             qDebug() << "json count: " << _jsonController.getJsonCount();
