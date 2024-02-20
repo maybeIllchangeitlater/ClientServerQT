@@ -43,11 +43,11 @@ namespace test{
          * @return сгенерированная строку
          */
         QString generateString(std::uniform_int_distribution<int> &dist){
-            int length = dist(_gen);
+            int length = _lengthDistribution(_gen);
             QString randString;
             randString.reserve(length);
             for (int i = 0; i < length; ++i) {
-                    randString += CHARNUMSET[_charNumDistribution(_gen)];
+                    randString += CHARNUMSET[dist(_gen)];
             }
             return randString;
         }
