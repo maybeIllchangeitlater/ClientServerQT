@@ -6,8 +6,8 @@
 namespace test{
 struct DateTime{
     /**
-     * @brief GetDateTime get current date and current time as pair of std strings
-     * @return std::pair<QString Date, QString Time>
+     * @brief GetDateTime получить текущую дату и время
+     * @return пару из строк - дата и время
      */
     static std::pair<QString, QString> GetDateTime() {
         auto now = std::chrono::system_clock::now();

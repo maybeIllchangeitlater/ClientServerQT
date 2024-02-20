@@ -1,44 +1,42 @@
 #ifndef CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H
 #define CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H
 
+#include <QObject>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QTcpSocket>
+#include <thread>
+#include <QDebug>
+#include "../utility/requestGenerator.h"
+#include "../common/data.h"
 
-namespace test{
+namespace test {
 
-class Client: public QObject {
+class Client : public QObject {
     Q_OBJECT
 public:
     explicit Client(unsigned short port = 8888);
 
     void connectToServer(unsigned short port);
     void disconnectFromServer();
-    void sendRequest(const QByteArray &requestData);
+//    void sendRequest(const QByteArray &requestData);
+    void startPingingServer();
 
 signals:
     void responseReceived(const QByteArray &responseData);
 
 private slots:
-    void onConnected() {
-        qDebug() << "Connected to server.";
-    }
-
-    void onDisconnected() {
-        qDebug() << "Disconnected from server.";
-    }
-
-    void onReadyRead() {
-        qDebug() << "Response received.";
-        QByteArray responseData = _socket.readAll();
-        qDebug() << responseData;
-        emit responseReceived(responseData);
-    }
+    void onRequestFinished(QNetworkReply *reply);
 
 private:
+    http::RequestGenerator _requestGenerator;
     QTcpSocket _socket;
+    QNetworkAccessManager _manager;
+    std::thread _pingThread;
     unsigned short _hostPort;
-
-
 };
-} //test
 
-#endif //CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H
+} // namespace test
+
+#endif // CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H
