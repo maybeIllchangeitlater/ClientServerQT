@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 project(server VERSION 0.1 LANGUAGES CXX)
 
+add_subdirectory(3rdParty/libpqxx build-pqxx)
+
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -21,14 +24,17 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
         server/server.h
-        ../common/http/request.h
-        ../common/http/response.h
-        ../common/http/statusMessage.h
-        ../common/http/requestString.h
-        ../common/http/header.h
-        ../common/enums/statusCode.h
-        ../common/enums/requestMethod.h
-        ../common/enums/contentType.h
+        repository/stringRepository.h
+        repository/stringRepository.cpp
+        repository/jsonRepository.h
+        repository/jsonRepository.cpp
+        service/stringService.h
+        service/jsonService.h
+        controller/jsonController.h
+        controller/stringController.h
+        3rdParty/libpqxx
+        ../common/data.h
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -56,6 +62,7 @@ endif()
 
 target_link_libraries(server PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(server PRIVATE Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(server PRIVATE pqxx)
 
 set_target_properties(server PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

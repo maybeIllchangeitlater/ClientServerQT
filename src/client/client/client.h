@@ -1,42 +1,68 @@
 #ifndef CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H
 #define CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H
 
-#include <QObject>
+#include <QDebug>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QObject>
 #include <QTcpSocket>
+#include <QTimer>
 #include <thread>
-#include <QDebug>
-#include "../utility/requestGenerator.h"
+
 #include "../common/data.h"
+#include "../common/utility/requestGenerator.h"
 
 namespace test {
 
 class Client : public QObject {
-    Q_OBJECT
-public:
-    explicit Client(unsigned short port = 8888);
+  Q_OBJECT
+ public:
+    /**
+   * @brief Client создает объект клиента, который пытается подключится к сереверу на localhost:port
+   * @param port сервера
+   */
+  explicit Client(unsigned short port = 8888);
 
-    void connectToServer(unsigned short port);
-    void disconnectFromServer();
-//    void sendRequest(const QByteArray &requestData);
-    void startPingingServer();
+ signals:
+    /**
+   * @brief responseReceived пришел ответ от сервера
+   * @param responseData ответ
+   */
+  void responseReceived(const QByteArray &responseData);
 
-signals:
-    void responseReceived(const QByteArray &responseData);
+ private slots:
+  /**
+   * @brief onRequestFinished запрос обработан
+   * @param reply ответ
+   */
+  void onRequestFinished(QNetworkReply *reply);
 
-private slots:
-    void onRequestFinished(QNetworkReply *reply);
-
-private:
-    http::RequestGenerator _requestGenerator;
-    QTcpSocket _socket;
-    QNetworkAccessManager _manager;
-    std::thread _pingThread;
-    unsigned short _hostPort;
+ private:
+  /**
+   * @brief connectToServer подключение к серверу
+   * @param port порт сервера
+   */
+  void connectToServer(unsigned short port);
+  /**
+   * @brief disconnectFromServer отключиться от сервера
+   */
+  void disconnectFromServer();
+  /**
+   * @brief startPingingServer начать посылать запросы серверу с переодичностью 1 секунда
+   */
+  void startPingingServer();
+  /**
+   * @brief pingServer отправить серверу пост запросы
+   */
+  void pingServer();
+  http::RequestGenerator _requestGenerator;
+  QTcpSocket _socket;
+  QNetworkAccessManager _manager;
+  QTimer _pingTimer;
+  unsigned short _hostPort;
 };
 
-} // namespace test
+}  // namespace test
 
-#endif // CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H
+#endif  // CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H

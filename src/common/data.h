@@ -1,11 +1,11 @@
-#ifndef CLIENTSERVERQT_COMMON_DATA_H
-#define CLIENTSERVERQT_COMMON_DATA_H
+#ifndef CLIENTSERVERQT_COMMON_DATA_H_
+#define CLIENTSERVERQT_COMMON_DATA_H_
 
 #include <QFile>
 #include <QJsonObject>
 #include <QString>
 
-#include "../client/utility/randomStringGenerator.h"
+#include "utility/randomStringGenerator.h"
 #include "utility/dateTime.h"
 
 namespace test {
@@ -86,6 +86,32 @@ class Data {
     file.close();
   }
 
+  /**
+   * @brief GetName
+   * @return константную ссылку на имя
+   */
+  const QString& GetName() const noexcept { return _name; }
+  /**
+   * @brief GetId
+   * @return константную ссылку на айди
+   */
+  const QString& GetId() const noexcept { return _id; }
+  /**
+   * @brief GetNumber
+   * @return  константную ссылку на номер
+   */
+  const QString& GetNumber() const noexcept { return _number; }
+  /**
+   * @brief GetDate
+   * @return константную ссылку на дату
+   */
+  const QString& GetDate() const noexcept { return _date; }
+  /**
+   * @brief GetTime
+   * @return константную ссылку на время
+   */
+  const QString& GetTime() const noexcept { return _time; }
+
  private:
   QString _name;    // json: "name"
   QString _id;      // json: "id"
@@ -95,4 +121,4 @@ class Data {
 };
 }  // namespace test
 
-#endif  // CLIENTSERVERQT_COMMON_DATA_H
+#endif  // CLIENTSERVERQT_COMMON_DATA_H_

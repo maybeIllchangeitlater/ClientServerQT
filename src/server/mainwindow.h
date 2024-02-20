@@ -13,11 +13,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(test::Server &server, QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
-    test::Server server;
+    test::Server &_server;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

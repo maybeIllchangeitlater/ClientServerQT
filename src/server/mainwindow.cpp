@@ -1,9 +1,10 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(test::Server &server, QWidget *parent)
+    : QMainWindow(parent),
+      _server(server),
+      ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     server.listen(QHostAddress::LocalHost, 8888);

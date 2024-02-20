@@ -5,7 +5,7 @@ namespace test{
 void StringRepository::insertString(const std::string& stringToInsert){
     pqxx::work task(_dbConnection);
 
-    std::string sql = "INSERT INTO string_data (text) VALUES (" + stringToInsert + ")";
+    std::string sql = "INSERT INTO string_data (text) VALUES (" + task.quote(stringToInsert) + ")";
     try{
         task.exec(sql);
         task.commit();

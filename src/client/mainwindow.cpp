@@ -3,11 +3,10 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow),
+      client(8888)
 {
     ui->setupUi(this);
-    client.connectToServer(8888);
-    client.sendRequest("GET Aboba");
 }
 
 MainWindow::~MainWindow()

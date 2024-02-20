@@ -9,16 +9,16 @@ BEGIN
     RAISE NOTICE 'Initializing the database...';
 END $$;
 
+-- Удаление представления, если оно уже существует
+DROP VIEW IF EXISTS custom_view;
+
 -- Удаление таблиц, если они уже существуют
-DROP TABLE IF EXISTS string_data;
-DROP TABLE IF EXISTS json_data;
+DROP TABLE IF EXISTS string_data CASCADE;
+DROP TABLE IF EXISTS json_data CASCADE;
 
 -- Удаление последовательностей, если они уже существуют
 DROP SEQUENCE IF EXISTS string_data_id_seq;
 DROP SEQUENCE IF EXISTS json_data_id_seq;
-
--- Удаление представления, если оно уже существует
-DROP VIEW IF EXISTS custom_view;
 
 -- Создание последовательности для автоинкремента id для string_data
 CREATE SEQUENCE string_data_id_seq START 1;
@@ -30,8 +30,8 @@ CREATE SEQUENCE json_data_id_seq START 1;
 CREATE TABLE string_data (
     id INT PRIMARY KEY DEFAULT nextval('string_data_id_seq'),
     text VARCHAR(255),
-    received_date DATE,
-    received_time TIME
+    received_date DATE DEFAULT NULL,
+    received_time TIME DEFAULT NULL
 );
 
 -- Создание таблицы для хранения JSON данных
@@ -42,8 +42,8 @@ CREATE TABLE json_data (
     number VARCHAR(255),
     created_date DATE,
     created_time TIME,
-    received_date DATE,
-    received_time TIME
+    received_date DATE DEFAULT NULL,
+    received_time TIME DEFAULT NULL
 );
 
 -- Создание функции для обновления даты и времени приема данных

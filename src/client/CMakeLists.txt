@@ -22,9 +22,9 @@ set(PROJECT_SOURCES
         mainwindow.ui
         client/client.h
         client/client.cpp
-        utility/randomStringGenerator.h
-        utility/dateTime.h
-        utility/requestGenerator.h
+        ../common/utility/randomStringGenerator.h
+        ../common/utility/dateTime.h
+        ../common/utility/requestGenerator.h
         ../common/data.h
 )
 
