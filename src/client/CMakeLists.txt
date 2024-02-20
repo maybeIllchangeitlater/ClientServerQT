@@ -24,6 +24,8 @@ set(PROJECT_SOURCES
         client/client.cpp
         utility/randomStringGenerator.h
         utility/dateTime.h
+        utility/requestGenerator.h
+        ../common/data.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
