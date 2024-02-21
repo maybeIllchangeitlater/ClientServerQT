@@ -5,6 +5,8 @@
 
 #include "../3rdParty/libpqxx/include/pqxx/pqxx"
 #include "../repository/stringRepository.h"
+#include "../common/constants/httpHeaderConstants.h"
+#include "../common/constants/BDNames.h"
 
 namespace test {
 /**
@@ -24,7 +26,7 @@ class StringService {
    * @param data POST запрос
    */
   void postString(const QByteArray& data) {
-    std::string body(data.mid(data.lastIndexOf("\r\n\r\n")).data() + 4);
+    std::string body(data.mid(data.lastIndexOf(http::headers::HEADERS_END)).data() + 4);
     if (!body.empty()) {
       _stringRepository.insertString(body);
     } else {
@@ -38,7 +40,7 @@ class StringService {
    */
   size_t getStringCount() {
     pqxx::result result = _stringRepository.getStringCount();
-    return result.empty() ? 0 : result[0]["id"].as<size_t>();
+    return result.empty() ? 0 : result[0][database::ID].as<size_t>();
   }
 
  private:

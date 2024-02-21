@@ -7,8 +7,18 @@ void JsonRepository::insertJson(const std::string &name, const std::string &id,
                                 const std::string &time){
     pqxx::work task(_dbConnection);
 
-    std::string sql = "INSERT INTO json_data (name, gen_id, number, created_date, created_time) VALUES (" +
-                task.quote(name) + ", " + task.quote(id) + ", " + task.quote(number) + ", " + task.quote(date) + ", " + task.quote(time) + ")";
+    std::string sql = std::string("INSERT INTO ") + database::JSON_TABLE
+            + " (" + database::JSON_TABLE_NAME
+            +", " + database::JSON_TABLE_GEN_ID
+            +", "+ database::JSON_TABLE_NUMBER
+            +", " + database::JSON_TABLE_CREATED_DATE
+            +", " + database::JSON_TABLE_CREATED_TIME
+            +") VALUES (" +
+            task.quote(name) +
+            ", " + task.quote(id) +
+            ", " + task.quote(number) +
+            ", " + task.quote(date) +
+            ", " + task.quote(time) + ")";
     try{
         task.exec(sql);
         task.commit();
@@ -21,7 +31,7 @@ void JsonRepository::insertJson(const std::string &name, const std::string &id,
 pqxx::result JsonRepository::getJsonCount(){
     pqxx::work task(_dbConnection);
 
-    std::string sql = "SELECT id FROM json_data ORDER BY id DESC LIMIT 1";
+    std::string sql = std::string("SELECT ") + database::ID + " FROM " + database::JSON_TABLE + " ORDER BY id DESC LIMIT 1";
         try {
           auto result = task.exec(sql);
           return result;

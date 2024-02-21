@@ -36,6 +36,9 @@ set(PROJECT_SOURCES
         controller/controller.h
         3rdParty/libpqxx
         ../common/data.h
+        ../common/constants/jsonNames.h
+        ../common/constants/httpHeaderConstants.h
+        ../common/constants/BDNames.h
 
 )
 

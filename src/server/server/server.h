@@ -32,29 +32,27 @@ protected:
         QTcpSocket *socket = new QTcpSocket(this);
         socket->setSocketDescriptor(socketDescriptor);
 
-        connect(socket, &QTcpSocket::readyRead, this, [=]() {
-            processRequest(socket);
-        });
+        connect(socket, &QTcpSocket::readyRead, this, &Server::processRequest);
 
         connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
     }
 
-private:
+private slots:
     /**
-     * @brief processRequest обрабатывает запрос посланный клиентом (POST 1 из 3 типов даты или GET количества сообщений в бд)
-     * @param socket сокет клиента
+     * @brief processRequest обрабатывает запрос посланный клиентом (POST 1 из 3 типов даты или GET количества сообщений принятых сервером/view из бд)
      */
-    void processRequest(QTcpSocket *socket) {
-        qDebug() << "got new request";
+    void processRequest() {
+        QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
         QByteArray requestData = socket->readAll();
-//        if(!requestData.contains("POST")){
-//            qDebug() << requestData;
-//        }
-        if (requestData.contains("/text-data")) {
+        QString path = parseURI(requestData);
+        QString connectionStatus = parseConnectionStatus(requestData);
+        qDebug() << path;
+        qDebug() << requestData;
+        if (path == "/text-data") {
             _controller.postString(requestData);
-        } else if (requestData.contains("/structured-data")) {
+        } else if (path == "/structured-data") {
             _controller.postJson(requestData);
-        } else if (requestData.contains("/message-count")){
+        } else if (path == "/message-count"){
             QByteArray data = _controller.getMessageCount();
             socket->write("HTTP/1.1 200 OK\r\n");
                 socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
@@ -65,7 +63,7 @@ private:
                 socket->waitForBytesWritten(); // Wait for bytes to be written
                 socket->disconnectFromHost();
                 return;
-        } else if(requestData.contains("/view")){
+        } else if(path == "/view"){
             QByteArray data = _controller.getView();
             socket->write("HTTP/1.1 200 OK\r\n");
             socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
@@ -76,9 +74,9 @@ private:
             socket->waitForBytesWritten(); // Wait for bytes to be written
             socket->disconnectFromHost();
             return;
-        } else if(requestData.contains("/file-upload")){
+        } else if(path == "/file-upload"){
             _controller.postBinary(requestData);
-        } else if(requestData.contains("/close")){
+        } else if(path == "/close"){
             QByteArray data = "Killed";
             socket->write("HTTP/1.1 200 OK\r\n");
                 socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
@@ -100,7 +98,38 @@ private:
             socket->flush(); // Ensure that the data is sent immediately
             socket->waitForBytesWritten(); // Wait for bytes to be written
     }
-
+private:
+    /**
+     * @brief parseURI извлекает идентефикатор ресурсов из пришедшего реквеста
+     * @param requestData реквест
+     * @return путь
+     */
+    QString parseURI(const QByteArray &requestData) const {
+        qsizetype pathIndex = requestData.indexOf('/');
+        qsizetype protocolIndex = requestData.indexOf("HTTP/1.1");
+        if (pathIndex != -1 && protocolIndex != -1 && protocolIndex > pathIndex){
+            return requestData.mid(pathIndex, requestData.indexOf("HTTP/1.1") - pathIndex - 1);
+        }else {
+            throw std::logic_error("invalid HTTP request");
+        }
+    }
+    /**
+     * @brief getConnectionStatus извлекает статус подключения из пришедшего реквеста
+     * @param requestData реквест
+     * @return статус подключения
+     */
+    QString parseConnectionStatus(const QByteArray &requestData) const {
+        qsizetype connectionHeaderIndex = requestData.indexOf("Connection:");
+        if (connectionHeaderIndex != -1){
+            qsizetype connectionHeaderEndIndex = requestData.indexOf("\r\n", connectionHeaderIndex);
+            if(connectionHeaderEndIndex != -1) {
+                QString connectionHeader = requestData.mid(connectionHeaderIndex, connectionHeaderEndIndex - connectionHeaderIndex);
+                QString status = connectionHeader.split(":").last().trimmed();
+                return status;
+            }
+        }
+        throw std::logic_error("invalid HTTP request");
+    }
     Controller& _controller;
 };
 } //test

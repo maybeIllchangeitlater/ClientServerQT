@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 #include "../3rdParty/libpqxx/include/pqxx/pqxx"
+#include "../common/constants/BDNames.h"
 
 namespace test{
 /**

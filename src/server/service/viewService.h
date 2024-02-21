@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include "../3rdParty/libpqxx/include/pqxx/pqxx"
 #include "../repository/viewRepository.h"
+#include "../common/constants/BDNames.h"
 
 namespace test {
 /**
@@ -31,9 +32,9 @@ class ViewService {
 
     for (const auto& row : result) {
       QJsonObject rowObject;
-      rowObject["ID"] = row[0].as<int>();
-      rowObject["Text/Name"] = QString::fromStdString(row[1].as<std::string>());
-      rowObject["Received Date"] =
+      rowObject[database::CUSTOM_VIEW_ID] = row[0].as<int>();
+      rowObject[database::CUSTOM_VIEW_TEXTNAME] = QString::fromStdString(row[1].as<std::string>());
+      rowObject[database::CUSTOM_VIEW_RECIEVED_DATE] =
           QString::fromStdString(row[2].as<std::string>());
       jsonArray.append(rowObject);
     }

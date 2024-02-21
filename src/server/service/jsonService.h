@@ -6,6 +6,8 @@
 
 #include "../3rdParty/libpqxx/include/pqxx/pqxx"
 #include "../common/data.h"
+#include "../common/constants/httpHeaderConstants.h"
+#include "../common/constants/BDNames.h"
 #include "../repository/jsonRepository.h"
 
 namespace test {
@@ -26,7 +28,7 @@ class JsonService {
    * @param data Post запрос
    */
   void postJson(const QByteArray& data) {
-    auto body = data.mid(data.lastIndexOf("\r\n\r\n") + 4);
+    auto body = data.mid(data.lastIndexOf(http::headers::HEADERS_END) + 4);
     QJsonDocument jsonDocument = QJsonDocument::fromJson(body);
     if (!jsonDocument.isNull()) {
       QJsonObject jsonObject = jsonDocument.object();
@@ -45,7 +47,7 @@ class JsonService {
    */
   size_t getJsonCount() {
     auto result = _jsonRepository.getJsonCount();
-    return result.empty() ? 0 : result[0]["id"].as<size_t>();
+    return result.empty() ? 0 : result[0][database::ID].as<size_t>();
   }
 
  private:

@@ -5,7 +5,8 @@ namespace test{
 void StringRepository::insertString(const std::string& stringToInsert){
     pqxx::work task(_dbConnection);
 
-    std::string sql = "INSERT INTO string_data (text) VALUES (" + task.quote(stringToInsert) + ")";
+    std::string sql = std::string("INSERT INTO ") + database::STRING_TABLE +" (" + database::STRING_TABLE_TEXT
+            + ") VALUES (" + task.quote(stringToInsert) + ")";
     try{
         task.exec(sql);
         task.commit();
@@ -18,7 +19,7 @@ void StringRepository::insertString(const std::string& stringToInsert){
 pqxx::result StringRepository::getStringCount(){
     pqxx::work task(_dbConnection);
 
-    std::string sql = "SELECT id FROM string_data ORDER BY id DESC LIMIT 1";
+    std::string sql = std::string("SELECT ") + database::ID + " FROM " + database::STRING_TABLE + " ORDER BY id DESC LIMIT 1";
         try {
           auto result = task.exec(sql);
           return result;

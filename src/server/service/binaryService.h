@@ -7,6 +7,9 @@
 
 #include "../3rdParty/libpqxx/include/pqxx/pqxx"
 #include "../repository/binaryRepository.h"
+#include "../common/constants/httpHeaderConstants.h"
+#include "../common/constants/BDNames.h"
+
 
 namespace test {
 /**
@@ -26,7 +29,7 @@ class BinaryService {
    * @param data Post запрос
    */
   void postBinary(const QByteArray& data) {
-     QByteArray body(data.mid(data.indexOf("\r\n\r\n") + 4));
+     QByteArray body(data.mid(data.indexOf(http::headers::HEADERS_END) + 4));
      qDebug() << body.data();
      if (!body.isEmpty()){
          _binaryRepository.insertBinary(body);
@@ -40,7 +43,7 @@ class BinaryService {
    */
   size_t getBinaryCount() {
       auto result = _binaryRepository.getBinaryCount();
-      return result.empty() ? 0 : result[0]["id"].as<size_t>();
+      return result.empty() ? 0 : result[0][database::ID].as<size_t>();
   }
 
  private:
