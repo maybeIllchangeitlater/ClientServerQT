@@ -7,10 +7,20 @@
 #include <QJsonDocument>
 
 namespace test{
+/**
+ * @brief The JsonService class предоставляющий функциональность для обработки json даты
+ */
 class JsonService{
 public:
+    /**
+     * @brief JsonService конструктор принимающий в себя репозиторий
+     * @param jsonRepository объект класса отвечающий за связь с базой данных
+     */
     explicit JsonService(JsonRepository &jsonRepository) : _jsonRepository(jsonRepository) {}
-
+    /**
+     * @brief PostJson обрабатывает и передает json данные в репозиторий
+     * @param data Post запрос
+     */
     void PostJson(const QByteArray& data){
         auto body = data.mid(data.lastIndexOf("\r\n\r\n") + 4);
         QJsonDocument jsonDocument = QJsonDocument::fromJson(body);
@@ -26,10 +36,13 @@ public:
             throw std::logic_error("attempted to post invalid json");
         }
     }
-
-    std::ptrdiff_t GetJsonCount() {
+    /**
+     * @brief GetJsonCount получение количества json сообщений полученных сервером
+     * @return количество сообщений
+     */
+    size_t GetJsonCount() {
         auto result = _jsonRepository.getJsonCount();
-        return result[0]["id"].as<std::ptrdiff_t>();
+        return result[0]["id"].as<size_t>();
     }
 
 private:

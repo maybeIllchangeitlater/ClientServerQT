@@ -7,11 +7,27 @@
 namespace test{
 class JsonRepository{
 public:
+    /**
+     * @brief JsonRepository конструктор репозитория хранящего json дату
+     * @param dbConnection pqxx::connection к базе данных
+     */
     explicit JsonRepository(pqxx::connection &dbConnection)
         : _dbConnection(dbConnection) {}
+    /**
+     * @brief insertJson вставка json в базу данных
+     * @param name поле json
+     * @param id поле json
+     * @param number поле json
+     * @param date поле json
+     * @param time поле json
+     */
     void insertJson(const std::string &name, const std::string &id,
                     const std::string &number, const std::string &date,
                     const std::string &time);
+    /**
+     * @brief getJsonCount получение количества json сообщений полученных сервером
+     * @return результат запроса
+     */
     pqxx::result getJsonCount();
 private:
     pqxx::connection &_dbConnection;
