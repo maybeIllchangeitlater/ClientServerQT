@@ -40,12 +40,9 @@ void Client::startPingingServer() {
 }
 
 void Client::pingServer() {
-//    QString vrot("v rot ebla");
-//    send(QString(vrot));
     send(_randomStringGenerator->generateNumCharString());
-//    QString govno = _requestGenerator.generatePostRandomStringRequest();
-//    QString govno("govno");
-//    send(govno);
+    Data data(_randomStringGenerator, _dateTimeStamper);
+    send(data.toJson());
 //  auto [requestString, bodyString] =
 //      _requestGenerator.generatePostRandomStringRequest();
 //  QNetworkReply *replyString = _manager.post(requestString, bodyString);
