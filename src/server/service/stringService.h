@@ -26,7 +26,7 @@ class StringService {
    * @param data POST запрос
    */
   void postString(const QByteArray& data) {
-    std::string body(data.mid(data.lastIndexOf(http::headers::HEADERS_END)).data() + 4);
+    std::string body(data.mid(data.lastIndexOf(http::headers::HEADERS_END) + 4));
     if (!body.empty()) {
       _stringRepository.insertString(body);
     } else {

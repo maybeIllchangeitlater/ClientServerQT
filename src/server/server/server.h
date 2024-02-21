@@ -9,6 +9,8 @@
 #include <QUrl>
 #include <QMap>
 #include "../controller/controller.h"
+#include "../common/constants/httpHeaderConstants.h"
+#include "../common/constants/URI.h"
 
 
 namespace test {
@@ -45,43 +47,46 @@ private slots:
         QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
         QByteArray requestData = socket->readAll();
         QString path = parseURI(requestData);
-        QString connectionStatus = parseConnectionStatus(requestData);
-        qDebug() << path;
-        qDebug() << requestData;
-        if (path == "/text-data") {
+//        QString connectionStatus = parseConnectionStatus(requestData);
+//        qDebug() << path;
+//        qDebug() << connectionStatus;
+//        qDebug() << requestData;
+        if (path == http::uri::STRING) {
             _controller.postString(requestData);
-        } else if (path == "/structured-data") {
+        }
+        else if (path == http::uri::JSON) {
             _controller.postJson(requestData);
-        } else if (path == "/message-count"){
+        } else if (path == http::uri::MESSAGE_COUNT){
             QByteArray data = _controller.getMessageCount();
-            socket->write("HTTP/1.1 200 OK\r\n");
-                socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
+            socket->write(http::headers::HEADER_OK);
+                socket->write("Content-Length: " + QByteArray::number(data.size()) + http::headers::HEADER_DELIMITER);
                 socket->write("Content-Type: text/plain\r\n");
-                socket->write("\r\n"); // End of headers
+                socket->write(http::headers::HEADER_DELIMITER); // End of headers
                 socket->write(data);
                 socket->flush(); // Ensure that the data is sent immediately
                 socket->waitForBytesWritten(); // Wait for bytes to be written
                 socket->disconnectFromHost();
                 return;
-        } else if(path == "/view"){
+        } else if(path == http::uri::VIEW){
             QByteArray data = _controller.getView();
-            socket->write("HTTP/1.1 200 OK\r\n");
-            socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
+            socket->write(http::headers::HEADER_OK);
+            socket->write("Content-Length: " + QByteArray::number(data.size()) + http::headers::HEADER_DELIMITER);
             socket->write("Content-Type: text/plain\r\n");
-            socket->write("\r\n"); // End of headers
+            socket->write(http::headers::HEADER_DELIMITER); // End of headers
             socket->write(data);
             socket->flush(); // Ensure that the data is sent immediately
             socket->waitForBytesWritten(); // Wait for bytes to be written
             socket->disconnectFromHost();
             return;
-        } else if(path == "/file-upload"){
+        } else if(path == http::uri::BINARY){
             _controller.postBinary(requestData);
-        } else if(path == "/close"){
+        }
+    else if(path == http::uri::CLOSE_CONNECTION){
             QByteArray data = "Killed";
-            socket->write("HTTP/1.1 200 OK\r\n");
-                socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
+            socket->write(http::headers::HEADER_OK);
+                socket->write("Content-Length: " + QByteArray::number(data.size()) + http::headers::HEADER_DELIMITER);
                 socket->write("Content-Type: text/plain\r\n");
-                socket->write("\r\n"); // End of headers
+                socket->write(http::headers::HEADER_DELIMITER); // End of headers
                 socket->write(data);
                 socket->flush(); // Ensure that the data is sent immediately
                 socket->waitForBytesWritten(); // Wait for bytes to be written
@@ -90,10 +95,10 @@ private slots:
         }
 
         QByteArray data = "Hello from server!";
-        socket->write("HTTP/1.1 200 OK\r\n");
-            socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
+        socket->write(http::headers::HEADER_OK);
+            socket->write("Content-Length: " + QByteArray::number(data.size()) + http::headers::HEADER_DELIMITER);
             socket->write("Content-Type: text/plain\r\n");
-            socket->write("\r\n"); // End of headers
+            socket->write(http::headers::HEADER_DELIMITER); // End of headers
             socket->write(data);
             socket->flush(); // Ensure that the data is sent immediately
             socket->waitForBytesWritten(); // Wait for bytes to be written
@@ -119,9 +124,9 @@ private:
      * @return статус подключения
      */
     QString parseConnectionStatus(const QByteArray &requestData) const {
-        qsizetype connectionHeaderIndex = requestData.indexOf("Connection:");
+        qsizetype connectionHeaderIndex = requestData.indexOf(http::headers::CONNECTION_HEADER);
         if (connectionHeaderIndex != -1){
-            qsizetype connectionHeaderEndIndex = requestData.indexOf("\r\n", connectionHeaderIndex);
+            qsizetype connectionHeaderEndIndex = requestData.indexOf(http::headers::HEADER_DELIMITER, connectionHeaderIndex);
             if(connectionHeaderEndIndex != -1) {
                 QString connectionHeader = requestData.mid(connectionHeaderIndex, connectionHeaderEndIndex - connectionHeaderIndex);
                 QString status = connectionHeader.split(":").last().trimmed();
