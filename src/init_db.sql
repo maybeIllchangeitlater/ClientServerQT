@@ -15,16 +15,21 @@ DROP VIEW IF EXISTS custom_view;
 -- Удаление таблиц, если они уже существуют
 DROP TABLE IF EXISTS string_data CASCADE;
 DROP TABLE IF EXISTS json_data CASCADE;
+DROP TABLE IF EXISTS binary_data CASCADE;
 
 -- Удаление последовательностей, если они уже существуют
 DROP SEQUENCE IF EXISTS string_data_id_seq;
 DROP SEQUENCE IF EXISTS json_data_id_seq;
+DROP SEQUENCE IF EXISTS binary_data_id_sq;
 
 -- Создание последовательности для автоинкремента id для string_data
 CREATE SEQUENCE string_data_id_seq START 1;
 
 -- Создание последовательности для автоинкремента id для json_data
 CREATE SEQUENCE json_data_id_seq START 1;
+
+-- Создание последовательности для автоинкремента id для binary_data
+CREATE SEQUENCE binary_data_id_seq START 1;
 
 -- Создание таблицы для хранения строковых данных
 CREATE TABLE string_data (
@@ -42,6 +47,14 @@ CREATE TABLE json_data (
     number VARCHAR(255),
     created_date DATE,
     created_time TIME,
+    received_date DATE DEFAULT NULL,
+    received_time TIME DEFAULT NULL
+);
+
+-- Создание таблицы для хранения бинарных данных
+CREATE TABLE binary_data (
+    id INT PRIMARY KEY DEFAULT nextval('binary_data_id_seq'),
+    data BYTEA,
     received_date DATE DEFAULT NULL,
     received_time TIME DEFAULT NULL
 );
@@ -65,6 +78,12 @@ EXECUTE FUNCTION update_received_datetime();
 -- Создание триггера для таблицы json_data
 CREATE TRIGGER update_json_data_datetime_trigger
 BEFORE INSERT ON json_data
+FOR EACH ROW
+EXECUTE FUNCTION update_received_datetime();
+
+-- Создание триггера для таблицы binary_data
+CREATE TRIGGER update_binary_data_datetime_trigger
+BEFORE INSERT ON binary_data
 FOR EACH ROW
 EXECUTE FUNCTION update_received_datetime();
 
