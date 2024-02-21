@@ -34,9 +34,13 @@ class Client : public QObject {
     /**
      * @brief post отправляет POST запрос на сервер
      * @param data дата для POST (QString, QJsonObject, binary file)
+     * @param handler что случится после получения ответа
+     * @param connectionStatus статус соединения
      */
     template<typename T, typename Handler>
-    void post(T &&data, Handler &&handler);
+    void post(T &&data, Handler &&handler,
+              http::RequestGenerator::ConnectionStatus connectionStatus
+              = http::RequestGenerator::ConnectionStatus::CLOSE);
     /**
      * @brief getMessageCount отправляет GET количества сообщений запрос на сервер
      */
@@ -54,6 +58,8 @@ class Client : public QObject {
    */
   void handlePingReplyFinished();
   void handlePostReplyFinished();
+  void handleGetMessageCountFinished();
+  void handleGetViewFinished();
 
  private:
   /**

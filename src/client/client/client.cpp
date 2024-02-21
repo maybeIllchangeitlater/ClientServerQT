@@ -23,9 +23,9 @@ void Client::closeSession() {
 }
 
 template<typename T, typename Handler>
-void Client::post(T &&data, Handler &&handler){
+void Client::post(T &&data, Handler &&handler, http::RequestGenerator::ConnectionStatus connectionStatus){
       auto [request, body] =
-          _requestGenerator.generatePostRequest(std::move(data));
+          _requestGenerator.generatePostRequest(std::move(data), connectionStatus);
       QNetworkReply *reply = _manager.post(request, body);
       connect(reply, &QNetworkReply::finished, this, handler);
 }
@@ -33,35 +33,13 @@ void Client::post(T &&data, Handler &&handler){
 void Client::getMessageCount(){
     auto request = _requestGenerator.getMessageCountRequest();
     QNetworkReply *reply = _manager.get(request);
-    connect(reply, &QNetworkReply::finished, [=]() {
-        if (reply->error() == QNetworkReply::NoError) {
-          QByteArray response = reply->readAll();
-          qDebug() << response;
-          // do something with the data...
-        } else  // handle error
-        {
-          qDebug() << reply->errorString();
-        }
-    });
-
-    reply->deleteLater();
+    connect(reply, &QNetworkReply::finished, this, &Client::handleGetViewFinished);
 }
 
 void Client::getView() {
     auto request = _requestGenerator.getViewRequest();
     QNetworkReply *reply = _manager.get(request);
-    connect(reply, &QNetworkReply::finished, [=]() {
-        if (reply->error() == QNetworkReply::NoError) {
-          QByteArray response = reply->readAll();
-          qDebug() << response;
-          // do something with the data...
-        } else  // handle error
-        {
-          qDebug() << reply->errorString();
-        }
-    });
-
-    reply->deleteLater();
+    connect(reply, &QNetworkReply::finished, this, &Client::handleGetViewFinished);
 }
 
 void Client::startPingingServer() {
@@ -71,16 +49,19 @@ void Client::startPingingServer() {
 
 void Client::pingServer() {
     _pingCounter.store(0);
-    post(_randomStringGenerator->generateNumCharString(), &Client::handlePingReplyFinished);
+    post(_randomStringGenerator->generateNumCharString(), &Client::handlePingReplyFinished,
+         http::RequestGenerator::ConnectionStatus::KEEP_ALIVE);
     Data data(_randomStringGenerator, _dateTimeStamper);
-    post(data.toJson(), &Client::handlePingReplyFinished);
+    post(data.toJson(), &Client::handlePingReplyFinished,
+         http::RequestGenerator::ConnectionStatus::KEEP_ALIVE);
     QString binaryFilepath = data.GetName() + ".bin";
     data.writeToBinaryFile(binaryFilepath);
     QFile binaryFile(binaryFilepath);
     if (!binaryFile.open(QIODevice::ReadOnly)) {
             throw std::runtime_error("failure opening binary file");
     }
-    post(std::move(binaryFile), &Client::handlePingReplyFinished);
+    post(std::move(binaryFile), &Client::handlePingReplyFinished,
+         http::RequestGenerator::ConnectionStatus::KEEP_ALIVE);
 }
 
 void Client::handlePingReplyFinished() {
@@ -104,6 +85,36 @@ void Client::handlePingReplyFinished() {
 }
 
 void Client::handlePostReplyFinished() {
+    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
+    if (!reply)
+        return;
+
+    if (reply->error() == QNetworkReply::NoError) {
+        QByteArray response = reply->readAll();
+        qDebug() << response;
+        // Process the response data...
+    } else {
+        qDebug() << reply->errorString();
+    }
+    reply->deleteLater();
+}
+
+void Client::handleGetMessageCountFinished() {
+    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
+    if (!reply)
+        return;
+
+    if (reply->error() == QNetworkReply::NoError) {
+        QByteArray response = reply->readAll();
+        qDebug() << response;
+        // Process the response data...
+    } else {
+        qDebug() << reply->errorString();
+    }
+    reply->deleteLater();
+}
+
+void Client::handleGetViewFinished() {
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
     if (!reply)
         return;

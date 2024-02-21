@@ -8,6 +8,7 @@
 
 #include "../common/randomStringGenerator.h"
 #include "../common/dateTime.h"
+#include "../common/constants/jsonNames.h"
 
 namespace test {
 class Data {
@@ -31,11 +32,11 @@ class Data {
    * @param json на котором будет основан обект
    */
   Data(const QJsonObject &json)
-      : _name(json["name"].toString()),
-        _id(json["id"].toString()),
-        _number(json["number"].toString()),
-        _date(json["date"].toString()),
-        _time(json["time"].toString()) {}
+      : _name(json[json::NAME].toString()),
+        _id(json[json::ID].toString()),
+        _number(json[json::NUMBER].toString()),
+        _date(json[json::DATE].toString()),
+        _time(json[json::TIME].toString()) {}
   /**
    * @brief Data конструктор на основе бинарного файла
    * @param filePath путь до бинарного файла
@@ -61,11 +62,11 @@ class Data {
    */
   QJsonObject toJson() const {
     QJsonObject json;
-    json["name"] = _name;
-    json["id"] = _id;
-    json["number"] = _number;
-    json["date"] = _date;
-    json["time"] = _time;
+    json[json::NAME] = _name;
+    json[json::ID] = _id;
+    json[json::NUMBER] = _number;
+    json[json::DATE] = _date;
+    json[json::TIME] = _time;
     return json;
   }
   /**

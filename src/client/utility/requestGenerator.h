@@ -8,19 +8,18 @@
 
 #include "../common/data.h"
 #include "../common/dateTime.h"
+#include "../common/constants/URI.h"
+#include "../common/constants/httpHeaderConstants.h"
 
 namespace test {
 namespace http {
 
 class RequestGenerator {
-  constexpr static const char *STRING_URL = "/text-data";
-  constexpr static const char *JSON_URL = "/structured-data";
-  constexpr static const char *BINARY_URL = "/file-upload";
-  constexpr static const char *MESSAGE_COUNT_URL = "/message-count";
-  constexpr static const char *VIEW_URL = "/view";
-    constexpr static const char *CLOSE_CONNECTION_URL = "/close";
-
  public:
+    enum ConnectionStatus{
+        KEEP_ALIVE,
+        CLOSE
+    };
   /**
    * @brief setHostPort устанавливает порт к которому отправляется запрос
    * @param hostPort порт к которому отправляется запрос
@@ -28,7 +27,7 @@ class RequestGenerator {
   void setHostPort(unsigned short hostPort) noexcept { _hostPort = hostPort; }
 
   template <typename T>
-  std::pair<QNetworkRequest, QByteArray> generatePostRequest(T &&data){
+  std::pair<QNetworkRequest, QByteArray> generatePostRequest(T &&data, ConnectionStatus connectionStatus){
       throw std::logic_error(std::string("Data type not supported: ") + typeid(data).name());
   }
 
@@ -38,14 +37,14 @@ class RequestGenerator {
    * @return пару из запроса и тела
    */
   template <>
-  std::pair<QNetworkRequest, QByteArray> generatePostRequest<QString>(QString &&string) {
-    QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + STRING_URL);
+  std::pair<QNetworkRequest, QByteArray> generatePostRequest<QString>(QString &&string, ConnectionStatus connectionStatus) {
+    QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + uri::STRING);
     QNetworkRequest request(url);
 
     auto body = string.toUtf8();
 
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "plain/text");
-    request.setRawHeader("Connection", "keep-alive");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, headers::PLAIN_TEXT);
+    request.setRawHeader(headers::CONNECTION_HEADER, getConnectionStatus(connectionStatus));
     request.setHeader(QNetworkRequest::ContentLengthHeader,
                       QByteArray::number(body.length()));
 
@@ -56,12 +55,12 @@ class RequestGenerator {
    * @return пара из запроса и тела
    */
   template <>
-  std::pair<QNetworkRequest, QByteArray> generatePostRequest<QJsonObject>(QJsonObject &&jsonObj) {
-    QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + JSON_URL);
+  std::pair<QNetworkRequest, QByteArray> generatePostRequest<QJsonObject>(QJsonObject &&jsonObj, ConnectionStatus connectionStatus) {
+    QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + uri::JSON);
     QNetworkRequest request(url);
 
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    request.setRawHeader("Connection", "keep-alive");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, headers::APPLICATION_JSON);
+    request.setRawHeader(headers::CONNECTION_HEADER, getConnectionStatus(connectionStatus));
     QJsonDocument doc(jsonObj);
     QByteArray byteArrayJson = doc.toJson();
     request.setHeader(QNetworkRequest::ContentLengthHeader,
@@ -76,14 +75,14 @@ class RequestGenerator {
    * @return пара из запроса и тела
    */
   template <>
-  std::pair<QNetworkRequest, QByteArray> generatePostRequest<QFile>(QFile &&binaryFile) {
-    QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + BINARY_URL);
+  std::pair<QNetworkRequest, QByteArray> generatePostRequest<QFile>(QFile &&binaryFile, ConnectionStatus connectionStatus) {
+    QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + uri::BINARY);
     QNetworkRequest request(url);
 
     QByteArray body = binaryFile.readAll();
 
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
-    request.setRawHeader("Connection", "keep-alive");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, headers::APPLICATION_OCTETSTREAM);
+    request.setRawHeader(headers::CONNECTION_HEADER, getConnectionStatus(connectionStatus));
     request.setHeader(QNetworkRequest::ContentLengthHeader, QByteArray::number(body.length()));
 
     return std::make_pair(std::move(request), std::move(body));
@@ -94,7 +93,7 @@ class RequestGenerator {
    */
   QNetworkRequest getMessageCountRequest() {
     QUrl url("http://127.0.0.1:" + QString::number(_hostPort) +
-             MESSAGE_COUNT_URL);
+             uri::MESSAGE_COUNT);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentLengthHeader, 0);
     return request;
@@ -104,7 +103,7 @@ class RequestGenerator {
    * @return запрос
    */
   QNetworkRequest getViewRequest() {
-    QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + VIEW_URL);
+    QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + uri::VIEW);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentLengthHeader, 0);
     return request;
@@ -114,14 +113,17 @@ class RequestGenerator {
    * @return запрос
    */
   QNetworkRequest closeSessionRequest() {
-      QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + CLOSE_CONNECTION_URL);
+      QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + uri::CLOSE_CONNECTION);
       QNetworkRequest request(url);
-      request.setRawHeader("Connection", "keep-alive");
+      request.setRawHeader(headers::CONNECTION_HEADER, headers::CONNECTION_STATUS_CLOSE);
       request.setHeader(QNetworkRequest::ContentLengthHeader, 0);
       return request;
   }
 
  private:
+  QByteArray getConnectionStatus(ConnectionStatus connectionStatus){
+      return connectionStatus == KEEP_ALIVE ? headers::CONNECTION_STATUS_ALIVE : headers::CONNECTION_STATUS_CLOSE;
+  }
   unsigned short _hostPort;
 };
 

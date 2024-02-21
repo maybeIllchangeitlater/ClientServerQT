@@ -24,6 +24,9 @@ set(PROJECT_SOURCES
         client/client.cpp
         ../common/randomStringGenerator.h
         ../common/dateTime.h
+        ../common/constants/URI.h
+        ../common/constants/httpHeaderConstants.h
+        ../common/constants/jsonNames.h
         utility/requestGenerator.h
         ../common/data.h
 )
