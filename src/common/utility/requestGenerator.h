@@ -15,6 +15,7 @@ class RequestGenerator{
     constexpr static const char * JSON_URL = "/structured-data";
     constexpr static const char * BINARY_URL = "/file-upload";
     constexpr static const char * MESSAGE_COUNT_URL = "/message-count";
+    constexpr static const char * VIEW_URL = "/view";
 public:
     /**
      * @brief setHostPort устанавливает порт к которому отправляется запрос
@@ -25,10 +26,10 @@ public:
     }
 
     /**
-     * @brief GeneratePostRandomStringRequest генерирует POST запрос случайной строки
+     * @brief generatePostRandomStringRequest генерирует POST запрос случайной строки
      * @return пару из запроса и тела
      */
-    std::pair<QNetworkRequest, QByteArray> GeneratePostRandomStringRequest() {
+    std::pair<QNetworkRequest, QByteArray> generatePostRandomStringRequest() {
         QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + STRING_URL);
         QNetworkRequest request(url);
 
@@ -41,10 +42,10 @@ public:
 
     }
     /**
-     * @brief GeneratePostRandomJsonRequest генерирует POST запрос случайно сгенерированной Data в виде json
+     * @brief generatePostRandomJsonRequest генерирует POST запрос случайно сгенерированной Data в виде json
      * @return пару из запроса и тела
      */
-    std::pair<QNetworkRequest, QByteArray> GeneratePostRandomJsonRequest() {
+    std::pair<QNetworkRequest, QByteArray> generatePostRandomJsonRequest() {
         QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + JSON_URL);
         QNetworkRequest request(url);
 
@@ -60,11 +61,21 @@ public:
 
     }
     /**
-     * @brief GetMessageCount генерирует GET запрос на количество сообщений в дб
+     * @brief getMessageCount генерирует GET запрос на количество сообщений в дб
      * @return запрос
      */
-    QNetworkRequest GetMessageCount() {
+    QNetworkRequest getMessageCount() {
         QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + MESSAGE_COUNT_URL);
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentLengthHeader, 0);
+        return request;
+    }
+    /**
+     * @brief getView генерирует GET запрос на view
+     * @return запрос
+     */
+    QNetworkRequest getView() {
+        QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + VIEW_URL);
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentLengthHeader, 0);
         return request;
