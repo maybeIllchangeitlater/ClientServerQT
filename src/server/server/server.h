@@ -13,7 +13,9 @@
 
 namespace test {
 
-
+/**
+ * @brief The Server class предоставляющий функционал сервера для передачи и получения данных от клиента
+ */
 class Server : public QTcpServer {
     Q_OBJECT
 public:
@@ -26,6 +28,7 @@ protected:
      * @param socketDescriptor описание сокета клиента
      */
     void incomingConnection(qintptr socketDescriptor) override {
+        qDebug() << "new client connected " << socketDescriptor;
         QTcpSocket *socket = new QTcpSocket(this);
         socket->setSocketDescriptor(socketDescriptor);
 
@@ -42,6 +45,7 @@ private:
      * @param socket сокет клиента
      */
     void processRequest(QTcpSocket *socket) {
+        qDebug() << "got new request";
         QByteArray requestData = socket->readAll();
 //        if(!requestData.contains("POST")){
 //            qDebug() << requestData;

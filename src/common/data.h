@@ -1,12 +1,13 @@
 #ifndef CLIENTSERVERQT_COMMON_DATA_H_
 #define CLIENTSERVERQT_COMMON_DATA_H_
 
+#include <memory>
 #include <QFile>
 #include <QJsonObject>
 #include <QString>
 
-#include "utility/randomStringGenerator.h"
-#include "utility/dateTime.h"
+#include "../common/randomStringGenerator.h"
+#include "../common/dateTime.h"
 
 namespace test {
 class Data {
@@ -16,10 +17,10 @@ class Data {
    * @param randStringGen генератор случайных строк
    * @param dateTimeStamper для получения текущей даты и времен
    */
-  Data(RandomStringGenerator &randStringGen, DateTime &dateTimeStamper)
-      : _name(randStringGen.generateNumCharString()),
-        _id(randStringGen.generateNumCharString()),
-        _number(randStringGen.generateNumOnlyString()) {
+  Data(std::unique_ptr<RandomStringGenerator> &randStringGen, DateTime &dateTimeStamper)
+      : _name(randStringGen->generateNumCharString()),
+        _id(randStringGen->generateNumCharString()),
+        _number(randStringGen->generateNumOnlyString()) {
     auto [date, time] = dateTimeStamper.getDateTime();
     _date = std::move(date);
     _time = std::move(time);
