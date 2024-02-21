@@ -1,5 +1,4 @@
 #include "jsonRepository.h"
-#include <iostream>
 
 namespace test{
 
@@ -10,7 +9,6 @@ void JsonRepository::insertJson(const std::string &name, const std::string &id,
 
     std::string sql = "INSERT INTO json_data (name, gen_id, number, created_date, created_time) VALUES (" +
                 task.quote(name) + ", " + task.quote(id) + ", " + task.quote(number) + ", " + task.quote(date) + ", " + task.quote(time) + ")";
-    std::cout << sql << std::endl;
     try{
         task.exec(sql);
         task.commit();
@@ -23,7 +21,7 @@ void JsonRepository::insertJson(const std::string &name, const std::string &id,
 pqxx::result JsonRepository::getJsonCount(){
     pqxx::work task(_dbConnection);
 
-    std::string sql = "SELECT id FROM json_data ORDER BY id DESCLIMIT 1";
+    std::string sql = "SELECT id FROM json_data ORDER BY id DESC LIMIT 1";
         try {
           auto result = task.exec(sql);
           return result;

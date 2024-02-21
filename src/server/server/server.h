@@ -8,8 +8,7 @@
 #include <QByteArray>
 #include <QUrl>
 #include <QMap>
-#include "../controller/stringController.h"
-#include "../controller/jsonController.h"
+#include "../controller/controller.h"
 
 
 namespace test {
@@ -18,8 +17,8 @@ namespace test {
 class Server : public QTcpServer {
     Q_OBJECT
 public:
-    explicit Server(StringController& stringController, JsonController& jsonController, QObject *parent = nullptr)
-        : _stringController(stringController), _jsonController(jsonController), QTcpServer(parent) {}
+    explicit Server(Controller& controller, QObject *parent = nullptr)
+        : _controller(controller), QTcpServer(parent) {}
 
 protected:
     /**
@@ -44,14 +43,25 @@ private:
      */
     void processRequest(QTcpSocket *socket) {
         QByteArray requestData = socket->readAll();
-
+        if(!requestData.contains("POST")){
+            qDebug() << requestData;
+        }
         if (requestData.contains("/text-data")) {
-            _stringController.postString(requestData);
-        } else if (requestData.contains("structured-data")) {
-            _jsonController.postJson(requestData);
-        } else if (requestData.contains("GET")){
-            qDebug() << "string count: " << _stringController.getStringCount();
-            qDebug() << "json count: " << _jsonController.getJsonCount();
+            _controller.postString(requestData);
+        } else if (requestData.contains("/structured-data")) {
+            _controller.postJson(requestData);
+        } else if (requestData.contains("/message-count")){
+            QString msgCount = _controller.getMessageCount();
+            QByteArray data = msgCount.toUtf8();
+            socket->write("HTTP/1.1 200 OK\r\n");
+                socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
+                socket->write("Content-Type: text/plain\r\n");
+                socket->write("\r\n"); // End of headers
+                socket->write(data);
+                socket->flush(); // Ensure that the data is sent immediately
+                socket->waitForBytesWritten(); // Wait for bytes to be written
+                socket->disconnectFromHost();
+                return;
 
         }
 
@@ -66,8 +76,7 @@ private:
             socket->disconnectFromHost();
     }
 
-    StringController &_stringController;
-    JsonController &_jsonController;
+    Controller& _controller;
 };
 } //test
 #endif //CLIENTSERVERQT_SERVER_SERVER_SERVER_H_

@@ -59,6 +59,16 @@ public:
         return std::make_pair(std::move(request), std::move(byteArrayJson));
 
     }
+    /**
+     * @brief GetMessageCount генерирует GET запрос на количество сообщений в дб
+     * @return запрос
+     */
+    QNetworkRequest GetMessageCount() {
+        QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + MESSAGE_COUNT_URL);
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::ContentLengthHeader, 0);
+        return request;
+    }
 //    std::pair<QNetworkRequest, QByteArray> PostRandomBinayRequest(const Data& data) {
 
 //    }

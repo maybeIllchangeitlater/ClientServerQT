@@ -67,6 +67,22 @@ void Client::pingServer() {
                 qDebug() << replyJson->errorString();
               }
           });
+
+          auto requestCount = _requestGenerator.GetMessageCount();
+          QNetworkReply *replyCount = _manager.get(requestCount);
+                  connect(replyCount, &QNetworkReply::finished, [=]() {
+
+                      if(replyCount->error() == QNetworkReply::NoError)
+                      {
+                          QByteArray response = replyCount->readAll();
+                          qDebug() << response;
+                          // do something with the data...
+                      }
+                      else // handle error
+                      {
+                        qDebug() << replyCount->errorString();
+                      }
+                  });
 }
 
 void Client::onRequestFinished(QNetworkReply *reply) {

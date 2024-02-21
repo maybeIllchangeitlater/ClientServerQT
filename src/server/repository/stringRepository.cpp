@@ -18,7 +18,7 @@ void StringRepository::insertString(const std::string& stringToInsert){
 pqxx::result StringRepository::getStringCount(){
     pqxx::work task(_dbConnection);
 
-    std::string sql = "SELECT id FROM string_data ORDER BY id DESCLIMIT 1";
+    std::string sql = "SELECT id FROM string_data ORDER BY id DESC LIMIT 1";
         try {
           auto result = task.exec(sql);
           return result;

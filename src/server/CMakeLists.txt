@@ -30,8 +30,7 @@ set(PROJECT_SOURCES
         repository/jsonRepository.cpp
         service/stringService.h
         service/jsonService.h
-        controller/jsonController.h
-        controller/stringController.h
+        controller/controller.h
         3rdParty/libpqxx
         ../common/data.h
 

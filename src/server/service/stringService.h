@@ -18,9 +18,9 @@ public:
         }
     }
 
-    QString GetStringCount() {
+    std::ptrdiff_t GetStringCount() {
         auto result = _stringRepository.getStringCount();
-        return QString::number(result[0]["id"].as<unsigned long>());
+        return result[0]["id"].as<std::ptrdiff_t>();
     }
 
 private:

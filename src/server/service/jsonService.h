@@ -27,9 +27,9 @@ public:
         }
     }
 
-    QString GetJsonCount() {
+    std::ptrdiff_t GetJsonCount() {
         auto result = _jsonRepository.getJsonCount();
-        return QString::number(result[0]["id"].as<unsigned long>());
+        return result[0]["id"].as<std::ptrdiff_t>();
     }
 
 private:

@@ -4,8 +4,7 @@
 #include "repository/jsonRepository.h"
 #include "service/stringService.h"
 #include "service/jsonService.h"
-#include "controller/stringController.h"
-#include "controller/jsonController.h"
+#include "controller/controller.h"
 #include "server/server.h"
 
 #include <QApplication>
@@ -20,9 +19,8 @@ int main(int argc, char *argv[])
     test::JsonRepository jsonRepository(connection);
     test::StringService stringService(stringRepository);
     test::JsonService jsonService(jsonRepository);
-    test::StringController stringController(stringService);
-    test::JsonController jsonController(jsonService);
-    test::Server server(stringController, jsonController);
+    test::Controller controller(stringService, jsonService);
+    test::Server server(controller);
     MainWindow w(server);
     w.show();
     return a.exec();
