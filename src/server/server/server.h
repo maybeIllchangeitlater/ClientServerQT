@@ -78,6 +78,17 @@ private:
             return;
         } else if(requestData.contains("/file-upload")){
             _controller.postBinary(requestData);
+        } else if(requestData.contains("/close")){
+            QByteArray data = "Killed";
+            socket->write("HTTP/1.1 200 OK\r\n");
+                socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
+                socket->write("Content-Type: text/plain\r\n");
+                socket->write("\r\n"); // End of headers
+                socket->write(data);
+                socket->flush(); // Ensure that the data is sent immediately
+                socket->waitForBytesWritten(); // Wait for bytes to be written
+                socket->disconnectFromHost();
+                return;
         }
 
         QByteArray data = "Hello from server!";
@@ -88,7 +99,6 @@ private:
             socket->write(data);
             socket->flush(); // Ensure that the data is sent immediately
             socket->waitForBytesWritten(); // Wait for bytes to be written
-            socket->disconnectFromHost();
     }
 
     Controller& _controller;

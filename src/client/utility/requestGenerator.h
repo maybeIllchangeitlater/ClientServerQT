@@ -18,6 +18,7 @@ class RequestGenerator {
   constexpr static const char *BINARY_URL = "/file-upload";
   constexpr static const char *MESSAGE_COUNT_URL = "/message-count";
   constexpr static const char *VIEW_URL = "/view";
+    constexpr static const char *CLOSE_CONNECTION_URL = "/close";
 
  public:
   /**
@@ -44,6 +45,7 @@ class RequestGenerator {
     auto body = string.toUtf8();
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "plain/text");
+    request.setRawHeader("Connection", "keep-alive");
     request.setHeader(QNetworkRequest::ContentLengthHeader,
                       QByteArray::number(body.length()));
 
@@ -59,6 +61,7 @@ class RequestGenerator {
     QNetworkRequest request(url);
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("Connection", "keep-alive");
     QJsonDocument doc(jsonObj);
     QByteArray byteArrayJson = doc.toJson();
     request.setHeader(QNetworkRequest::ContentLengthHeader,
@@ -80,15 +83,16 @@ class RequestGenerator {
     QByteArray body = binaryFile.readAll();
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
+    request.setRawHeader("Connection", "keep-alive");
     request.setHeader(QNetworkRequest::ContentLengthHeader, QByteArray::number(body.length()));
 
     return std::make_pair(std::move(request), std::move(body));
   }
   /**
-   * @brief getMessageCount генерирует GET запрос на количество сообщений в дб
+   * @brief getMessageCountRequest генерирует GET запрос на количество сообщений в дб
    * @return запрос
    */
-  QNetworkRequest getMessageCount() {
+  QNetworkRequest getMessageCountRequest() {
     QUrl url("http://127.0.0.1:" + QString::number(_hostPort) +
              MESSAGE_COUNT_URL);
     QNetworkRequest request(url);
@@ -96,14 +100,25 @@ class RequestGenerator {
     return request;
   }
   /**
-   * @brief getView генерирует GET запрос на view
+   * @brief getViewRequest генерирует GET запрос на view
    * @return запрос
    */
-  QNetworkRequest getView() {
+  QNetworkRequest getViewRequest() {
     QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + VIEW_URL);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentLengthHeader, 0);
     return request;
+  }
+  /**
+   * @brief closeSessionRequest генерирует запрос на закрытие соединения
+   * @return запрос
+   */
+  QNetworkRequest closeSessionRequest() {
+      QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + CLOSE_CONNECTION_URL);
+      QNetworkRequest request(url);
+      request.setRawHeader("Connection", "keep-alive");
+      request.setHeader(QNetworkRequest::ContentLengthHeader, 0);
+      return request;
   }
 
  private:
