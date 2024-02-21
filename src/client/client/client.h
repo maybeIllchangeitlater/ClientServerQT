@@ -35,27 +35,36 @@ class Client : public QObject {
      * @brief post отправляет POST запрос на сервер
      * @param data дата для POST (QString, QJsonObject, binary file)
      */
-    template<typename T>
-    void post(T &&data);
+    template<typename T, typename Handler>
+    void post(T &&data, Handler &&handler);
+    /**
+     * @brief getMessageCount отправляет GET количества сообщений запрос на сервер
+     */
+    void getMessageCount();
 
- signals:
+    /**
+     * @brief getView отправляет GET view запрос на сервер
+     */
+    void getView();
+
+ public slots:
   /**
    * @brief responseReceived пришел ответ от сервера
    * @param responseData ответ
    */
-  void responseReceived(const QByteArray &responseData);
+  void handlePingReplyFinished();
+  void handlePostReplyFinished();
 
  private:
+  /**
+   * @brief closeSession отправить запрос на закрытие сессии
+   */
   void closeSession();
   /**
    * @brief connectToServer подключение к серверу
    * @param port порт сервера
    */
   void connectToServer(unsigned short port);
-  /**
-   * @brief disconnectFromServer отключиться от сервера
-   */
-  void disconnectFromServer();
   /**
    * @brief startPingingServer начать посылать запросы серверу с переодичностью
    * 1 секунда
