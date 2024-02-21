@@ -6,10 +6,10 @@
 namespace test{
 struct DateTime{
     /**
-     * @brief GetDateTime получить текущую дату и время
+     * @brief getDateTime получить текущую дату и время
      * @return пару из строк - дата и время
      */
-    static std::pair<QString, QString> GetDateTime() {
+    static std::pair<QString, QString> getDateTime() {
         auto now = std::chrono::system_clock::now();
         std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
         auto localized = *std::localtime(&currentTime);
