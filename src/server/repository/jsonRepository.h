@@ -6,7 +6,7 @@
 
 namespace test{
 /**
- * @brief The JsonRepository class предоставляющий функциональность для работы с json базой данных
+ * @brief The JsonRepository class предоставляющий функциональность для работы с базой данных jsonов
  */
 class JsonRepository{
 public:

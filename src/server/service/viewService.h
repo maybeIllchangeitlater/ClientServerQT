@@ -22,7 +22,7 @@ class ViewService {
       : _viewRepository(viewRepository) {}
 
     /**
-   * @brief GetView получить view из базы данных
+   * @brief getView получить view из базы данных
    * @return QByteArray с полями view
    */
   QByteArray getView() {

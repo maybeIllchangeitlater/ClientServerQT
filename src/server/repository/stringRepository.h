@@ -6,7 +6,7 @@
 
 namespace test{
 /**
- * @brief The StringRepository class предоставляющий функциональность для работы с строковой базой данных
+ * @brief The StringRepository class предоставляющий функциональность для работы с базой данных строк
  */
 class StringRepository{
 public:

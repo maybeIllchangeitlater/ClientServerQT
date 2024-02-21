@@ -6,6 +6,7 @@
 #include "../service/jsonService.h"
 #include "../service/stringService.h"
 #include "../service/viewService.h"
+#include "../service/binaryService.h"
 
 namespace test{
 /**
@@ -17,12 +18,15 @@ public:
      * @brief Controller конструктор принимающий в себя два объекта сервисов
      * @param stringService объект для обработки json даты
      * @param jsonService объект для обработки строковой даты
+     * @param binaryService объект для обработки бинарных файлов
      * @param viewService объект для обработки view
      */
-    explicit Controller(StringService &stringService, JsonService &jsonService, ViewService &viewService)
+    explicit Controller(StringService &stringService, JsonService &jsonService,
+                        BinaryService &binaryService, ViewService &viewService)
         : _stringService(stringService),
           _jsonService(jsonService),
-          _viewService(viewService) {}
+          _binaryService(binaryService),
+          _viewService(viewService)  {}
     /**
      * @brief postString записать строку в репозиторий
      * @param data запрос
@@ -50,6 +54,19 @@ public:
         }
     }
     /**
+     * @brief postBinary записать бинарный файл в репозиторий
+     * @param data запрос
+     * @return сообщение об ошибке
+     */
+    QString postBinary(const QByteArray& data) {
+        try{
+            _binaryService.postBinary(data);
+            return "";
+        }catch(const std::exception &e){
+            return e.what();
+        }
+    }
+    /**
      * @brief getMessageCount получить количество сообщений отправленных серверу за все время
      * @return количество сообщений
      */
@@ -57,7 +74,8 @@ public:
         try{
            size_t stringCount = _stringService.getStringCount();
            size_t jsonCount = _jsonService.getJsonCount();
-           return QByteArray::number(stringCount + jsonCount);
+           size_t binaryCount = _binaryService.getBinaryCount();
+           return QByteArray::number(stringCount + jsonCount + binaryCount);
         } catch(const std::exception &e) {
             return e.what();
         }
@@ -76,6 +94,7 @@ public:
     private:
         StringService &_stringService;
         JsonService &_jsonService;
+        BinaryService &_binaryService;
         ViewService &_viewService;
 };
 } //test

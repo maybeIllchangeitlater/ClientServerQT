@@ -28,10 +28,13 @@ set(PROJECT_SOURCES
         repository/stringRepository.cpp
         repository/jsonRepository.h
         repository/jsonRepository.cpp
+        repository/binaryRepository.h
+        repository/binaryRepository.cpp
         repository/viewRepository.h
         repository/viewRepository.cpp
         service/stringService.h
         service/jsonService.h
+        service/binaryService.h
         service/viewService.h
         controller/controller.h
         3rdParty/libpqxx

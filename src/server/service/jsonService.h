@@ -22,7 +22,7 @@ class JsonService {
   explicit JsonService(JsonRepository& jsonRepository)
       : _jsonRepository(jsonRepository) {}
   /**
-   * @brief PostJson обрабатывает и передает json данные в репозиторий
+   * @brief postJson обрабатывает и передает json данные в репозиторий
    * @param data Post запрос
    */
   void postJson(const QByteArray& data) {
@@ -40,12 +40,12 @@ class JsonService {
     }
   }
   /**
-   * @brief GetJsonCount получение количества json сообщений полученных сервером
+   * @brief getJsonCount получение количества json сообщений полученных сервером
    * @return количество сообщений
    */
   size_t getJsonCount() {
     auto result = _jsonRepository.getJsonCount();
-    return result[0]["id"].as<size_t>();
+    return result.empty() ? 0 : result[0]["id"].as<size_t>();
   }
 
  private:

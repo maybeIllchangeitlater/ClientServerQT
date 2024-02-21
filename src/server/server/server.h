@@ -43,9 +43,9 @@ private:
      */
     void processRequest(QTcpSocket *socket) {
         QByteArray requestData = socket->readAll();
-        if(!requestData.contains("POST")){
-            qDebug() << requestData;
-        }
+//        if(!requestData.contains("POST")){
+//            qDebug() << requestData;
+//        }
         if (requestData.contains("/text-data")) {
             _controller.postString(requestData);
         } else if (requestData.contains("/structured-data")) {
@@ -72,6 +72,8 @@ private:
             socket->waitForBytesWritten(); // Wait for bytes to be written
             socket->disconnectFromHost();
             return;
+        } else if(requestData.contains("/file-upload")){
+            _controller.postBinary(requestData);
         }
 
         QByteArray data = "Hello from server!";

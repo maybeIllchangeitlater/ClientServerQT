@@ -1,4 +1,5 @@
 #include "client.h"
+#include <QDebug>
 
 namespace test {
 
@@ -47,7 +48,7 @@ void Client::pingServer() {
     }
   });
 
-  auto [requestJson, bodyJson] =
+  auto [requestJson, bodyJson, data] =
       _requestGenerator.generatePostRandomJsonRequest();
 
   QNetworkReply *replyJson = _manager.post(requestJson, bodyJson);
@@ -59,6 +60,27 @@ void Client::pingServer() {
     } else  // handle error
     {
       qDebug() << replyJson->errorString();
+    }
+  });
+
+  auto binaryFile = "/Users/monke/Desktop/" + data.GetTime() + ".bin";
+  data.writeToBinaryFile(binaryFile);
+
+  auto [requestBinary, bodyBinary] =
+      _requestGenerator.generatePostBinaryRequest(binaryFile);
+
+          Data test(binaryFile);
+          qDebug() << test.GetName() << test.GetId() << test.GetNumber() << test.GetDate() << test.GetTime();
+
+  QNetworkReply *replyBinary = _manager.post(requestBinary, bodyBinary);
+  connect(replyBinary, &QNetworkReply::finished, [=]() {
+    if (replyBinary->error() == QNetworkReply::NoError) {
+      QByteArray response = replyBinary->readAll();
+      qDebug() << response;
+      // do something with the data...
+    } else  // handle error
+    {
+      qDebug() << replyBinary->errorString();
     }
   });
 

@@ -20,7 +20,7 @@ class StringService {
   explicit StringService(StringRepository& stringRepository)
       : _stringRepository(stringRepository) {}
   /**
-   * @brief PostString брабатывает и передает строковые данные в репозиторий
+   * @brief postString брабатывает и передает строковые данные в репозиторий
    * @param data POST запрос
    */
   void postString(const QByteArray& data) {
@@ -32,13 +32,13 @@ class StringService {
     }
   }
   /**
-   * @brief GetStringCount получение количества строковых сообщений полученных
+   * @brief getStringCount получение количества строковых сообщений полученных
    * сервером
    * @return количество сообщений
    */
   size_t getStringCount() {
     pqxx::result result = _stringRepository.getStringCount();
-    return result[0]["id"].as<size_t>();
+    return result.empty() ? 0 : result[0]["id"].as<size_t>();
   }
 
  private:
