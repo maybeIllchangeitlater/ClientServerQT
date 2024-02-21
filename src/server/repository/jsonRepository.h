@@ -5,6 +5,9 @@
 #include "../3rdParty/libpqxx/include/pqxx/pqxx"
 
 namespace test{
+/**
+ * @brief The JsonRepository class предоставляющий функциональность для работы с json базой данных
+ */
 class JsonRepository{
 public:
     /**

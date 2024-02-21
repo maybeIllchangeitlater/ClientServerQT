@@ -51,8 +51,7 @@ private:
         } else if (requestData.contains("/structured-data")) {
             _controller.postJson(requestData);
         } else if (requestData.contains("/message-count")){
-            QString msgCount = _controller.getMessageCount();
-            QByteArray data = msgCount.toUtf8();
+            QByteArray data = _controller.getMessageCount();
             socket->write("HTTP/1.1 200 OK\r\n");
                 socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
                 socket->write("Content-Type: text/plain\r\n");
@@ -62,7 +61,17 @@ private:
                 socket->waitForBytesWritten(); // Wait for bytes to be written
                 socket->disconnectFromHost();
                 return;
-
+        } else if(requestData.contains("/view")){
+            QByteArray data = _controller.getView();
+            socket->write("HTTP/1.1 200 OK\r\n");
+            socket->write("Content-Length: " + QByteArray::number(data.size()) + "\r\n");
+            socket->write("Content-Type: text/plain\r\n");
+            socket->write("\r\n"); // End of headers
+            socket->write(data);
+            socket->flush(); // Ensure that the data is sent immediately
+            socket->waitForBytesWritten(); // Wait for bytes to be written
+            socket->disconnectFromHost();
+            return;
         }
 
         QByteArray data = "Hello from server!";

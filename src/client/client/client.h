@@ -14,18 +14,22 @@
 #include "../common/utility/requestGenerator.h"
 
 namespace test {
-
+/**
+ * @brief The Client class предоставляющий функциональность клиента для передачи
+ * и получения данных от сервера
+ */
 class Client : public QObject {
   Q_OBJECT
  public:
-    /**
-   * @brief Client создает объект клиента, который пытается подключится к сереверу на localhost:port
+  /**
+   * @brief Client создает объект клиента, который пытается подключится к
+   * сереверу на localhost:port
    * @param port сервера
    */
   explicit Client(unsigned short port = 8888);
 
  signals:
-    /**
+  /**
    * @brief responseReceived пришел ответ от сервера
    * @param responseData ответ
    */
@@ -49,7 +53,8 @@ class Client : public QObject {
    */
   void disconnectFromServer();
   /**
-   * @brief startPingingServer начать посылать запросы серверу с переодичностью 1 секунда
+   * @brief startPingingServer начать посылать запросы серверу с переодичностью
+   * 1 секунда
    */
   void startPingingServer();
   /**

@@ -2,8 +2,10 @@
 #include "3rdParty/libpqxx/include/pqxx/pqxx"
 #include "repository/stringRepository.h"
 #include "repository/jsonRepository.h"
+#include "repository/viewRepository.h"
 #include "service/stringService.h"
 #include "service/jsonService.h"
+#include "service/viewService.h"
 #include "controller/controller.h"
 #include "server/server.h"
 
@@ -17,9 +19,11 @@ int main(int argc, char *argv[])
           "port=5432");
     test::StringRepository stringRepository(connection);
     test::JsonRepository jsonRepository(connection);
+    test::ViewRepository viewRepository(connection);
     test::StringService stringService(stringRepository);
     test::JsonService jsonService(jsonRepository);
-    test::Controller controller(stringService, jsonService);
+    test::ViewService viewService(viewRepository);
+    test::Controller controller(stringService, jsonService, viewService);
     test::Server server(controller);
     MainWindow w(server);
     w.show();

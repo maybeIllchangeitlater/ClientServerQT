@@ -1,8 +1,11 @@
 #ifndef CLIENTSERVERQT_SERVER_CONTROLLER_CONTROLLER_H_
 #define CLIENTSERVERQT_SERVER_CONTROLLER_CONTROLLER_H_
 
+#include <QJsonDocument>
+#include <QJsonObject>
 #include "../service/jsonService.h"
 #include "../service/stringService.h"
+#include "../service/viewService.h"
 
 namespace test{
 /**
@@ -14,10 +17,12 @@ public:
      * @brief Controller конструктор принимающий в себя два объекта сервисов
      * @param stringService объект для обработки json даты
      * @param jsonService объект для обработки строковой даты
+     * @param viewService объект для обработки view
      */
-    explicit Controller(StringService &stringService, JsonService &jsonService)
+    explicit Controller(StringService &stringService, JsonService &jsonService, ViewService &viewService)
         : _stringService(stringService),
-          _jsonService(jsonService) {}
+          _jsonService(jsonService),
+          _viewService(viewService) {}
     /**
      * @brief postString записать строку в репозиторий
      * @param data запрос
@@ -25,7 +30,7 @@ public:
      */
     QString postString(const QByteArray& data){
         try{
-            _stringService.PostString(data);
+            _stringService.postString(data);
             return "";
         }catch(const std::exception &e){
             return e.what();
@@ -38,7 +43,7 @@ public:
      */
     QString postJson(const QByteArray& data) {
         try{
-            _jsonService.PostJson(data);
+            _jsonService.postJson(data);
             return "";
         }catch(const std::exception &e){
             return e.what();
@@ -48,18 +53,30 @@ public:
      * @brief getMessageCount получить количество сообщений отправленных серверу за все время
      * @return количество сообщений
      */
-    QString getMessageCount(){
+    QByteArray getMessageCount(){
         try{
-           size_t stringCount = _stringService.GetStringCount();
-           size_t jsonCount = _jsonService.GetJsonCount();
-           return QString::number(stringCount + jsonCount);
+           size_t stringCount = _stringService.getStringCount();
+           size_t jsonCount = _jsonService.getJsonCount();
+           return QByteArray::number(stringCount + jsonCount);
         } catch(const std::exception &e) {
             return e.what();
+        }
+    }
+    /**
+     * @brief getView получить view из базы данных
+     * @return QByteArray репрезентацию view
+     */
+    QByteArray getView() {
+        try{
+            return _viewService.getView();
+        }catch(const std::exception &e) {
+                    return e.what();
         }
     }
     private:
         StringService &_stringService;
         JsonService &_jsonService;
+        ViewService &_viewService;
 };
 } //test
 

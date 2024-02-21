@@ -20,7 +20,7 @@ class Data {
       : _name(randStringGen.generateNumCharString()),
         _id(randStringGen.generateNumCharString()),
         _number(randStringGen.generateNumOnlyString()) {
-    auto [date, time] = dateTimeStamper.GetDateTime();
+    auto [date, time] = dateTimeStamper.getDateTime();
     _date = std::move(date);
     _time = std::move(time);
   }
