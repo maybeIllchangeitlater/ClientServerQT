@@ -43,6 +43,14 @@ void Client::pingServer() {
     send(_randomStringGenerator->generateNumCharString());
     Data data(_randomStringGenerator, _dateTimeStamper);
     send(data.toJson());
+    QString binaryFilepath = data.GetName() + ".bin";
+    data.writeToBinaryFile(binaryFilepath);
+    QFile binaryFile(binaryFilepath);
+    if (!binaryFile.open(QIODevice::ReadOnly)) {
+            throw std::runtime_error("failure opening binary file");
+    }
+    send(std::move(binaryFile));
+
 //  auto [requestString, bodyString] =
 //      _requestGenerator.generatePostRandomStringRequest();
 //  QNetworkReply *replyString = _manager.post(requestString, bodyString);

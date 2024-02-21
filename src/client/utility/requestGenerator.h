@@ -58,8 +58,6 @@ class RequestGenerator {
     QUrl url("http://127.0.0.1:" + QString::number(_hostPort) + JSON_URL);
     QNetworkRequest request(url);
 
-//    auto body = data.toJson();
-
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     QJsonDocument doc(jsonObj);
     QByteArray byteArrayJson = doc.toJson();
