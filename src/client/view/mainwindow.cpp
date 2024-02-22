@@ -2,8 +2,8 @@
 
 #include "./ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), _client() {
+MainWindow::MainWindow(QString &projectDir, QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow), _client(projectDir) {
   ui->setupUi(this);
 
   connectNoPopButtons();

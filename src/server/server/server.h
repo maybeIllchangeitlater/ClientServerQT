@@ -26,8 +26,8 @@ class Server : public QTcpServer {
    * @param controller объект предоставляющий для выполнения различных запросов
    * к базе данных
    */
-  explicit Server(Controller &controller, QObject *parent = nullptr)
-      : _controller(controller), QTcpServer(parent) {}
+  explicit Server(Controller &controller, QString &projectDir, QObject *parent = nullptr)
+      : _controller(controller), _projectDir(projectDir), QTcpServer(parent) {}
 
  protected:
   /**
@@ -78,6 +78,7 @@ class Server : public QTcpServer {
 
  private:
   Controller &_controller;
+  QString &_projectDir;
 };
 }  // namespace test
 #endif  // CLIENTSERVERQT_SERVER_SERVER_SERVER_H_

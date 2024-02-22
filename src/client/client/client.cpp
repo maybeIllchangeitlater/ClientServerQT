@@ -1,11 +1,13 @@
 #include "client.h"
 
 #include <QDebug>
+#include <QDir>
 
 namespace test {
 
-Client::Client(unsigned short port)
-    : _hostPort(port),
+Client::Client(QString &projectDir, unsigned short port)
+    : _projectDir(projectDir),
+      _hostPort(port),
       _manager(this),
       _randomStringGenerator(std::make_unique<RandomStringGenerator>()) {}
 
@@ -59,11 +61,12 @@ void Client::pingServer() {
   Data data(_randomStringGenerator);
   post(data.toJson(), &Client::handlePingReplyFinished,
        http::RequestGenerator::ConnectionStatus::KEEP_ALIVE);
-  QString binaryFilepath = data.GetName() + ".bin";
+  QString binaryFilepath = _projectDir + data.GetName() + ".bin";
+  qDebug() << _projectDir;
   data.writeToBinaryFile(binaryFilepath);
   QFile binaryFile(binaryFilepath);
   if (!binaryFile.open(QIODevice::ReadOnly)) {
-    throw std::runtime_error("failure opening binary file");
+    return;
   }
   post(std::move(binaryFile), &Client::handlePingReplyFinished,
        http::RequestGenerator::ConnectionStatus::KEEP_ALIVE);

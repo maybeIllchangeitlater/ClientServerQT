@@ -22,7 +22,7 @@ namespace test {
  */
 class Client : public QObject {
   Q_OBJECT
-  constexpr static const size_t PING_DELAY = 60000;  // 1 минута
+  constexpr static const size_t PING_DELAY = 6000;  // 1 минута
   constexpr static const int8_t REQUESTS_PER_SESSION = 3;
 
  public:
@@ -31,7 +31,7 @@ class Client : public QObject {
    * сереверу на localhost:port
    * @param port сервера
    */
-  explicit Client(unsigned short port = 8888);
+  explicit Client(QString &projectDir, unsigned short port = 8888);
 
   /**
    * @brief connectToServer подключение к серверу
@@ -111,6 +111,7 @@ class Client : public QObject {
  private:
   QNetworkAccessManager _manager;
   QTimer _pingTimer;
+  QString &_projectDir;
   std::unique_ptr<RandomStringGenerator> _randomStringGenerator;
   http::RequestGenerator _requestGenerator;
   std::atomic<unsigned short> _pingCounter;

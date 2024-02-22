@@ -28,7 +28,8 @@ int main(int argc, char *argv[]) {
   test::ViewService viewService(viewRepository);
   test::Controller controller(stringService, jsonService, binaryService,
                               viewService);
-  test::Server server(controller);
+  QString projectDir = QCoreApplication::applicationDirPath();
+  test::Server server(controller, projectDir);
 
   server.listen(QHostAddress(config.serverHost), config.serverPort);
   return a.exec();
