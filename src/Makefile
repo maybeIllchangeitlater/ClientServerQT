@@ -1,4 +1,4 @@
-all: clean build
+all: clean init_sql build
 
 build: build_server build_client
 
@@ -27,4 +27,7 @@ doxygen:
 	doxygen Doxyfile
 	open html/index.html
 
-.PHONY: build build_server build_client serv cli clean_server clean_client clean doxygen
+init_sql:
+	psql -U postgres -f init_db.sql
+
+.PHONY: build build_server build_client serv cli clean_server clean_client clean doxygen init_sql
