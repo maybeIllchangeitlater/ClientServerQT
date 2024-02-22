@@ -39,4 +39,4 @@
 ![](https://github.com/maybeIllchangeitlater/ClientServerQT/blob/refactor/readmeResources/binWin1.png)
 ![](https://github.com/maybeIllchangeitlater/ClientServerQT/blob/refactor/readmeResources/binWin2.png)
 
-Получает данные от клиента и сохранят их в базу данных
+Сервер получает данные от клиента и сохранят их в базу данных
