@@ -52,13 +52,21 @@ class Client : public QObject {
     void getView();
 
  public slots:
-  /**
-   * @brief responseReceived пришел ответ от сервера
-   * @param responseData ответ
+    /**
+   * @brief handlePingReplyFinished обрабатывает ответ пингов к серверу
    */
   void handlePingReplyFinished();
+  /**
+   * @brief handlePostReplyFinished обрабатывает ответ пост запросов к серверу
+   */
   void handlePostReplyFinished();
+  /**
+   * @brief handleGetMessageCountFinished обрабатывает ответ на получение количества сообщений от сервера
+   */
   void handleGetMessageCountFinished();
+  /**
+   * @brief handleGetViewFinished обрабатывает ответ на получений view из сервера
+   */
   void handleGetViewFinished();
 
  private:

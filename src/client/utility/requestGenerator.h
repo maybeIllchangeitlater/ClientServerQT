@@ -13,9 +13,14 @@
 
 namespace test {
 namespace http {
-
+/**
+ * @brief The RequestGenerator class предоставляющий функциональность генерации HTTP запросов
+ */
 class RequestGenerator {
  public:
+    /**
+     * @brief The ConnectionStatus enum предостовляющий статусы соединения
+     */
     enum ConnectionStatus{
         KEEP_ALIVE,
         CLOSE

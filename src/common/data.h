@@ -11,6 +11,9 @@
 #include "../common/constants/jsonNames.h"
 
 namespace test {
+/**
+ * @brief The Data class предоставляющий функционал создания случайного набора данных и сереализации/десериализации в json и бинарный файл
+ */
 class Data {
  public:
   /**

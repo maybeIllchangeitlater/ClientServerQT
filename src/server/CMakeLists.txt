@@ -21,6 +21,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 set(PROJECT_SOURCES
         main.cpp
         server/server.h
+        config/config.h
         repository/stringRepository.h
         repository/stringRepository.cpp
         repository/jsonRepository.h
@@ -37,6 +38,7 @@ set(PROJECT_SOURCES
         3rdParty/libpqxx
         ../common/data.h
         ../common/constants/jsonNames.h
+        ../common/constants/configJsonNames.h
         ../common/constants/httpHeaderConstants.h
         ../common/constants/BDNames.h
 
