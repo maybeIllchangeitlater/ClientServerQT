@@ -21,5 +21,10 @@ clean_client:
 	rm -rf build_client 
 
 clean: clean_server clean_client
+	rm -rf html
 
-.PHONY: build build_server build_client serv cli clean_server clean_client clean
+doxygen:
+	doxygen Doxyfile
+	open html/index.html
+
+.PHONY: build build_server build_client serv cli clean_server clean_client clean doxygen
