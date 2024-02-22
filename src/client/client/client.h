@@ -86,6 +86,7 @@ class Client : public QObject {
 
 signals:
     void messageCount(QString);
+    void viewRecieved(QByteArray);
     void postedByClient(QString);
 
  private:

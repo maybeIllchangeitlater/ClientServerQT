@@ -42,6 +42,15 @@ MainWindow::MainWindow(QWidget *parent)
       _dataGenerationPopup->setData(json);
   });
 
+  connect(ui->getView, &QPushButton::clicked, this, [&](){
+      _client.getView();
+  });
+  connect(&_client, &test::Client::viewRecieved, this, [&](QByteArray view){
+      _viewShowPopup->setView(view);
+      _viewShowPopup->exec();
+  });
+
+
 }
 
 void MainWindow::connectToServer() {

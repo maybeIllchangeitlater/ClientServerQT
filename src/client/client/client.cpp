@@ -74,12 +74,8 @@ void Client::handlePingReplyFinished() {
     if (!reply)
         return;
 
-    if (reply->error() == QNetworkReply::NoError) {
-        QByteArray response = reply->readAll();
-        qDebug() << response;
-        // Process the response data...
-    } else {
-        qDebug() << reply->errorString();
+    if (reply->error() != QNetworkReply::NoError) {
+        emit postedByClient(reply->errorString());
     }
 
     if (_pingCounter.load() == 3) {
@@ -111,10 +107,8 @@ void Client::handleGetMessageCountFinished() {
         QByteArray response = reply->readAll();
         qDebug() << response;
         emit messageCount(response);
-        // Process the response data...
     } else {
-        emit(reply->errorString());
-        qDebug() << reply->errorString();
+        emit postedByClient(reply->errorString());
     }
     reply->deleteLater();
 }
@@ -127,9 +121,9 @@ void Client::handleGetViewFinished() {
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray response = reply->readAll();
         qDebug() << response;
-        // Process the response data...
+        emit viewRecieved(response);
     } else {
-        qDebug() << reply->errorString();
+        emit postedByClient(reply->errorString());
     }
     reply->deleteLater();
 }

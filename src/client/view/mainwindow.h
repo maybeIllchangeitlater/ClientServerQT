@@ -8,6 +8,7 @@
 #include "client/client.h"
 #include "stringGenerationPopup.h"
 #include "dataGenerationPopup.h"
+#include "viewShowPopup.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -33,6 +34,8 @@ class MainWindow : public QMainWindow {
       std::make_unique<StringGenerationPopup>();
   std::unique_ptr<DataGenerationPopup> _dataGenerationPopup =
           std::make_unique<DataGenerationPopup>();
+  std::unique_ptr<ViewShowPopup> _viewShowPopup =
+          std::make_unique<ViewShowPopup>();
   Ui::MainWindow *ui;
 };
 #endif  // MAINWINDOW_H
