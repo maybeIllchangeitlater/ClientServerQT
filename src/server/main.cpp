@@ -16,7 +16,7 @@
 
 int main(int argc, char *argv[]) {
   QCoreApplication a(argc, argv);
-  auto config = test::Config::fromJsonFile("../config.json");
+  auto config = test::Config::fromJsonFile("../src/config.json");
   pqxx::connection connection(config.DBSettingsString().toStdString());
   test::StringRepository stringRepository(connection);
   test::JsonRepository jsonRepository(connection);
