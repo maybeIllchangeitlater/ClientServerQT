@@ -30,66 +30,46 @@ public:
     /**
      * @brief postString записать строку в репозиторий
      * @param data запрос
-     * @return сообщение об ошибке
+     * @return ответ
      */
-    QString postString(const QByteArray& data){
-        try{
-            _stringService.postString(data);
-            return "";
-        }catch(const std::exception &e){
-            return e.what();
-        }
+    QByteArray postString(const QByteArray& data){
+        _stringService.postString(data);
+        return "";
     }
     /**
      * @brief postJson записать json в репозиторий
      * @param data запрос
-     * @return сообщение об ошибке
+     * @return ответ
      */
-    QString postJson(const QByteArray& data) {
-        try{
+    QByteArray postJson(const QByteArray& data) {
             _jsonService.postJson(data);
             return "";
-        }catch(const std::exception &e){
-            return e.what();
-        }
     }
     /**
      * @brief postBinary записать бинарный файл в репозиторий
      * @param data запрос
-     * @return сообщение об ошибке
+     * @return ответ
      */
-    QString postBinary(const QByteArray& data) {
-        try{
+    QByteArray postBinary(const QByteArray& data) {
             _binaryService.postBinary(data);
             return "";
-        }catch(const std::exception &e){
-            return e.what();
-        }
     }
     /**
      * @brief getMessageCount получить количество сообщений отправленных серверу за все время
      * @return количество сообщений
      */
     QByteArray getMessageCount(){
-        try{
            size_t stringCount = _stringService.getStringCount();
            size_t jsonCount = _jsonService.getJsonCount();
            size_t binaryCount = _binaryService.getBinaryCount();
            return QByteArray::number(stringCount + jsonCount + binaryCount);
-        } catch(const std::exception &e) {
-            return e.what();
-        }
     }
     /**
      * @brief getView получить view из базы данных
      * @return QByteArray репрезентацию view
      */
     QByteArray getView() {
-        try{
             return _viewService.getView();
-        }catch(const std::exception &e) {
-                    return e.what();
-        }
     }
     private:
         StringService &_stringService;
