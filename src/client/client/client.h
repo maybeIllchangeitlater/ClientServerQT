@@ -32,6 +32,12 @@ class Client : public QObject {
   explicit Client(unsigned short port = 8888);
 
     /**
+     * @brief connectToServer подключение к серверу
+     * @param port порт сервера
+     */
+    void connectToServer(unsigned short port, const QString &host = "localhost");
+
+    /**
      * @brief post отправляет POST запрос на сервер
      * @param data дата для POST (QString, QJsonObject, binary file)
      * @param handler что случится после получения ответа
@@ -69,16 +75,14 @@ class Client : public QObject {
    */
   void handleGetViewFinished();
 
+signals:
+    void messageCount(QString);
+
  private:
   /**
    * @brief closeSession отправить запрос на закрытие сессии
    */
   void closeSession();
-  /**
-   * @brief connectToServer подключение к серверу
-   * @param port порт сервера
-   */
-  void connectToServer(unsigned short port);
   /**
    * @brief startPingingServer начать посылать запросы серверу с переодичностью
    * 1 секунда

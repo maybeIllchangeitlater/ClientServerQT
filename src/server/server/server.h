@@ -166,6 +166,8 @@ class Server : public QTcpServer {
     }
     throw std::logic_error("invalid HTTP request");
   }
+
+private:
   Controller &_controller;
 };
 }  // namespace test

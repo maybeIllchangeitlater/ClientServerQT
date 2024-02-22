@@ -6,13 +6,13 @@ namespace test {
 Client::Client(unsigned short port)
     : _hostPort(port), _manager(this),
     _randomStringGenerator(std::make_unique<RandomStringGenerator>()) {
-  connectToServer(_hostPort);
 }
 
-void Client::connectToServer(unsigned short port) {
+void Client::connectToServer(unsigned short port, const QString &host) {
     _hostPort = port;
     _requestGenerator.setHostPort(port);
-    _manager.connectToHost("loaclhost", 8888);
+    _requestGenerator.setHostHost(host);
+    _manager.connectToHost(host, port);
     startPingingServer();
 }
 
@@ -33,7 +33,7 @@ void Client::post(T &&data, Handler &&handler, http::RequestGenerator::Connectio
 void Client::getMessageCount(){
     auto request = _requestGenerator.getMessageCountRequest();
     QNetworkReply *reply = _manager.get(request);
-    connect(reply, &QNetworkReply::finished, this, &Client::handleGetViewFinished);
+    connect(reply, &QNetworkReply::finished, this, &Client::handleGetMessageCountFinished);
 }
 
 void Client::getView() {
@@ -101,14 +101,17 @@ void Client::handlePostReplyFinished() {
 
 void Client::handleGetMessageCountFinished() {
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-    if (!reply)
+    if (!reply){
         return;
+    }
 
     if (reply->error() == QNetworkReply::NoError) {
         QByteArray response = reply->readAll();
         qDebug() << response;
+        emit messageCount(response);
         // Process the response data...
     } else {
+        emit(reply->errorString());
         qDebug() << reply->errorString();
     }
     reply->deleteLater();
