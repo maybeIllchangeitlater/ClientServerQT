@@ -51,7 +51,7 @@ void Client::pingServer() {
     _pingCounter.store(0);
     post(_randomStringGenerator->generateNumCharString(), &Client::handlePingReplyFinished,
          http::RequestGenerator::ConnectionStatus::KEEP_ALIVE);
-    Data data(_randomStringGenerator, _dateTimeStamper);
+    Data data(_randomStringGenerator);
     post(data.toJson(), &Client::handlePingReplyFinished,
          http::RequestGenerator::ConnectionStatus::KEEP_ALIVE);
     QString binaryFilepath = data.GetName() + ".bin";
@@ -94,11 +94,9 @@ void Client::handlePostReplyFinished() {
         return;
 
     if (reply->error() == QNetworkReply::NoError) {
-        QByteArray response = reply->readAll();
-        qDebug() << response;
-        // Process the response data...
+        emit postedByClient("Successfully saved to database");
     } else {
-        qDebug() << reply->errorString();
+        emit postedByClient(reply->errorString());
     }
     reply->deleteLater();
 }

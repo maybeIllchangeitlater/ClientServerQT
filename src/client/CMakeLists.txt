@@ -23,6 +23,9 @@ set(PROJECT_SOURCES
         view/stringGenerationPopup.h
         view/stringGenerationPopup.cpp
         view/stringGenerationPopup.ui
+        view/dataGenerationPopup.h
+        view/dataGenerationPopup.cpp
+        view/dataGenerationPopup.ui
         client/client.h
         client/client.cpp
         ../common/randomStringGenerator.h

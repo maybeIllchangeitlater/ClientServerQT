@@ -86,6 +86,7 @@ class Client : public QObject {
 
 signals:
     void messageCount(QString);
+    void postedByClient(QString);
 
  private:
   /**
@@ -103,13 +104,11 @@ signals:
   void pingServer();
 private:
   QNetworkAccessManager _manager;
-  QTcpSocket _socket;
   QTimer _pingTimer;
   std::unique_ptr<RandomStringGenerator> _randomStringGenerator;
   http::RequestGenerator _requestGenerator;
   std::atomic<unsigned short> _pingCounter;
   unsigned short _hostPort;
-  DateTime _dateTimeStamper;
 };
 
 }  // namespace test

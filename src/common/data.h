@@ -21,11 +21,11 @@ class Data {
    * @param randStringGen генератор случайных строк
    * @param dateTimeStamper для получения текущей даты и времен
    */
-  Data(std::unique_ptr<RandomStringGenerator> &randStringGen, DateTime &dateTimeStamper)
+  Data(std::unique_ptr<RandomStringGenerator> &randStringGen)
       : _name(randStringGen->generateNumCharString()),
         _id(randStringGen->generateNumCharString()),
         _number(randStringGen->generateNumOnlyString()) {
-    auto [date, time] = dateTimeStamper.getDateTime();
+    auto [date, time] = DateTime::getDateTime();
     _date = std::move(date);
     _time = std::move(time);
   }
