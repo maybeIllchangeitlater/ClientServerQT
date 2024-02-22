@@ -125,7 +125,7 @@ class Server : public QTcpServer {
     socket->flush();
     socket->waitForBytesWritten();
     if (connectionStatus == http::headers::CONNECTION_STATUS_CLOSE) {
-      qDebug() << "im out";
+      qDebug() << "ending session with " << socket->socketDescriptor();
       socket->disconnectFromHost();
     }
   }
