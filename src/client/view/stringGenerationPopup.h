@@ -9,7 +9,8 @@ namespace Ui {
 class StringGenerationPopup;
 }
 /**
- * @brief StringGenerationPopup class предоставляющий функциональность всплывающего окна для отправки/генерации строк
+ * @brief StringGenerationPopup class предоставляющий функциональность
+ * всплывающего окна для отправки/генерации строк
  */
 class StringGenerationPopup : public QDialog {
   Q_OBJECT
@@ -17,7 +18,7 @@ class StringGenerationPopup : public QDialog {
  public:
   explicit StringGenerationPopup(QWidget *parent = nullptr);
   ~StringGenerationPopup();
-    /**
+  /**
    * @brief setString установить строку
    * @param string строка
    */

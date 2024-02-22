@@ -21,6 +21,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 set(PROJECT_SOURCES
         main.cpp
         server/server.h
+        server/server.cpp
         config/config.h
         repository/stringRepository.h
         repository/stringRepository.cpp

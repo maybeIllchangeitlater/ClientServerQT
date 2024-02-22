@@ -26,10 +26,10 @@ QJsonObject DataGenerationPopup::packToJson() {
 }
 
 void DataGenerationPopup::setData(const QJsonObject &json) {
-    ui->name->setText(json[test::json::NAME].toString());
-    ui->id->setText(json[test::json::ID].toString());
-    ui->number->setText(json[test::json::NUMBER].toString());
-  }
+  ui->name->setText(json[test::json::NAME].toString());
+  ui->id->setText(json[test::json::ID].toString());
+  ui->number->setText(json[test::json::NUMBER].toString());
+}
 
 void DataGenerationPopup::closeEvent(QCloseEvent *event) {
   ui->name->clear();

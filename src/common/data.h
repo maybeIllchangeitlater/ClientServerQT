@@ -1,18 +1,19 @@
 #ifndef CLIENTSERVERQT_COMMON_DATA_H_
 #define CLIENTSERVERQT_COMMON_DATA_H_
 
-#include <memory>
 #include <QFile>
 #include <QJsonObject>
 #include <QString>
+#include <memory>
 
-#include "../common/randomStringGenerator.h"
-#include "../common/dateTime.h"
 #include "../common/constants/jsonNames.h"
+#include "../common/dateTime.h"
+#include "../common/randomStringGenerator.h"
 
 namespace test {
 /**
- * @brief The Data class предоставляющий функционал создания случайного набора данных и сереализации/десериализации в json и бинарный файл
+ * @brief The Data class предоставляющий функционал создания случайного набора
+ * данных и сереализации/десериализации в json и бинарный файл
  */
 class Data {
  public:
@@ -21,7 +22,7 @@ class Data {
    * @param randStringGen генератор случайных строк
    * @param dateTimeStamper для получения текущей даты и времен
    */
-  Data(std::unique_ptr<RandomStringGenerator> &randStringGen)
+  Data(std::unique_ptr<RandomStringGenerator>& randStringGen)
       : _name(randStringGen->generateNumCharString()),
         _id(randStringGen->generateNumCharString()),
         _number(randStringGen->generateNumOnlyString()) {
@@ -34,7 +35,7 @@ class Data {
    * @brief Data конструктор на основе json объекта
    * @param json на котором будет основан обект
    */
-  Data(const QJsonObject &json)
+  Data(const QJsonObject& json)
       : _name(json[json::NAME].toString()),
         _id(json[json::ID].toString()),
         _number(json[json::NUMBER].toString()),
@@ -44,7 +45,7 @@ class Data {
    * @brief Data конструктор на основе бинарного файла
    * @param filePath путь до бинарного файла
    */
-  Data(const QString &filePath) {
+  Data(const QString& filePath) {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly)) {
       throw std::runtime_error("Cannot open " + filePath.toStdString() +
@@ -76,7 +77,7 @@ class Data {
    * @brief writeToBinaryFile создает бинарный файл на основе даты
    * @param filePath путь к бинарному файлу
    */
-  void writeToBinaryFile(const QString &filePath) const {
+  void writeToBinaryFile(const QString& filePath) const {
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly)) {
       throw std::runtime_error("Cannot open " + filePath.toStdString() +

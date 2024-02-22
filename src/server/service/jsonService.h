@@ -5,9 +5,9 @@
 #include <QString>
 
 #include "../3rdParty/libpqxx/include/pqxx/pqxx"
-#include "../common/data.h"
-#include "../common/constants/httpHeaderConstants.h"
 #include "../common/constants/BDNames.h"
+#include "../common/constants/httpHeaderConstants.h"
+#include "../common/data.h"
 #include "../repository/jsonRepository.h"
 
 namespace test {

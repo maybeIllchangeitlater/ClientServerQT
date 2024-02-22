@@ -13,7 +13,8 @@ namespace Ui {
 class DataGenerationPopup;
 }
 /**
- * @brief DataGenerationPopup class  предоставляющий функциональность всплывающего окна для отправки/генерации даты
+ * @brief DataGenerationPopup class  предоставляющий функциональность
+ * всплывающего окна для отправки/генерации даты
  */
 class DataGenerationPopup : public QDialog {
   Q_OBJECT
@@ -21,7 +22,7 @@ class DataGenerationPopup : public QDialog {
  public:
   explicit DataGenerationPopup(QWidget *parent = nullptr);
   ~DataGenerationPopup();
-    /**
+  /**
    * @brief setData установить дату
    * @param data джейсон представления даты
    */

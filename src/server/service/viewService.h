@@ -4,9 +4,10 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+
 #include "../3rdParty/libpqxx/include/pqxx/pqxx"
-#include "../repository/viewRepository.h"
 #include "../common/constants/BDNames.h"
+#include "../repository/viewRepository.h"
 
 namespace test {
 /**
@@ -22,7 +23,7 @@ class ViewService {
   explicit ViewService(ViewRepository& viewRepository)
       : _viewRepository(viewRepository) {}
 
-    /**
+  /**
    * @brief getView получить view из базы данных
    * @return QByteArray с полями view
    */
@@ -33,7 +34,8 @@ class ViewService {
     for (const auto& row : result) {
       QJsonObject rowObject;
       rowObject[database::CUSTOM_VIEW_ID] = row[0].as<int>();
-      rowObject[database::CUSTOM_VIEW_TEXTNAME] = QString::fromStdString(row[1].as<std::string>());
+      rowObject[database::CUSTOM_VIEW_TEXTNAME] =
+          QString::fromStdString(row[1].as<std::string>());
       rowObject[database::CUSTOM_VIEW_RECIEVED_DATE] =
           QString::fromStdString(row[2].as<std::string>());
       jsonArray.append(rowObject);

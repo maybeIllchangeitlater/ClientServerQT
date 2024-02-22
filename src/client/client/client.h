@@ -3,17 +3,16 @@
 
 #include <QDebug>
 #include <QNetworkAccessManager>
+#include <QNetworkInformation>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QNetworkInformation>
-
 #include <QObject>
 #include <QTimer>
 #include <memory>
 
 #include "../common/data.h"
-#include "../common/randomStringGenerator.h"
 #include "../common/dateTime.h"
+#include "../common/randomStringGenerator.h"
 #include "utility/requestGenerator.h"
 
 namespace test {
@@ -23,8 +22,9 @@ namespace test {
  */
 class Client : public QObject {
   Q_OBJECT
- constexpr static const size_t PING_DELAY = 60000; //1 минута
- constexpr static const int8_t REQUESTS_PER_SESSION = 3;
+  constexpr static const size_t PING_DELAY = 60000;  // 1 минута
+  constexpr static const int8_t REQUESTS_PER_SESSION = 3;
+
  public:
   /**
    * @brief Client создает объект клиента, который пытается подключится к
@@ -33,43 +33,43 @@ class Client : public QObject {
    */
   explicit Client(unsigned short port = 8888);
 
-    /**
-     * @brief connectToServer подключение к серверу
-     * @param port порт сервера
-     */
-    void connectToServer(unsigned short port, const QString &host = "localhost");
+  /**
+   * @brief connectToServer подключение к серверу
+   * @param port порт сервера
+   */
+  void connectToServer(unsigned short port, const QString &host = "localhost");
 
-    /**
-     * @brief post отправляет POST запрос на сервер
-     * @param data дата для POST (QString, QJsonObject, binary file)
-     * @param handler что случится после получения ответа
-     * @param connectionStatus статус соединения
-     */
-    template<typename T, typename Handler>
-    void post(T &&data, Handler &&handler,
-              http::RequestGenerator::ConnectionStatus connectionStatus
-              = http::RequestGenerator::ConnectionStatus::CLOSE);
-    /**
-     * @brief getMessageCount отправляет GET количества сообщений запрос на сервер
-     */
-    void getMessageCount();
+  /**
+   * @brief post отправляет POST запрос на сервер
+   * @param data дата для POST (QString, QJsonObject, binary file)
+   * @param handler что случится после получения ответа
+   * @param connectionStatus статус соединения
+   */
+  template <typename T, typename Handler>
+  void post(T &&data, Handler &&handler,
+            http::RequestGenerator::ConnectionStatus connectionStatus =
+                http::RequestGenerator::ConnectionStatus::CLOSE);
+  /**
+   * @brief getMessageCount отправляет GET количества сообщений запрос на сервер
+   */
+  void getMessageCount();
 
-    /**
-     * @brief getView отправляет GET view запрос на сервер
-     */
-    void getView();
-    /**
-     * @brief generateRandomString производит случайную строку
-     * @return случайно сгенерированную строку
-     */
-    QString generateRandomString();
+  /**
+   * @brief getView отправляет GET view запрос на сервер
+   */
+  void getView();
+  /**
+   * @brief generateRandomString производит случайную строку
+   * @return случайно сгенерированную строку
+   */
+  QString generateRandomString();
 
  public slots:
-    /**
-     * @brief postString from view
-     */
-    void postString(QString string);
-    /**
+  /**
+   * @brief postString from view
+   */
+  void postString(QString string);
+  /**
    * @brief handlePingReplyFinished обрабатывает ответ пингов к серверу
    */
   void handlePingReplyFinished();
@@ -78,18 +78,20 @@ class Client : public QObject {
    */
   void handlePostReplyFinished();
   /**
-   * @brief handleGetMessageCountFinished обрабатывает ответ на получение количества сообщений от сервера
+   * @brief handleGetMessageCountFinished обрабатывает ответ на получение
+   * количества сообщений от сервера
    */
   void handleGetMessageCountFinished();
   /**
-   * @brief handleGetViewFinished обрабатывает ответ на получений view из сервера
+   * @brief handleGetViewFinished обрабатывает ответ на получений view из
+   * сервера
    */
   void handleGetViewFinished();
 
-signals:
-    void messageCount(QString);
-    void viewRecieved(QByteArray);
-    void postedByClient(QString);
+ signals:
+  void messageCount(QString);
+  void viewRecieved(QByteArray);
+  void postedByClient(QString);
 
  private:
   /**
@@ -105,7 +107,8 @@ signals:
    * @brief pingServer отправить серверу пост запросы
    */
   void pingServer();
-private:
+
+ private:
   QNetworkAccessManager _manager;
   QTimer _pingTimer;
   std::unique_ptr<RandomStringGenerator> _randomStringGenerator;
@@ -116,4 +119,4 @@ private:
 
 }  // namespace test
 
-#endif //CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H_
+#endif  // CLIENTSERVERQT_CLIENT_CLIENT_CLIENT_H_
