@@ -26,10 +26,12 @@ void MainWindow::connectPopUpsRequested() {
           [&]() { _dataGenerationPopup->exec(); });
 
   connect(ui->viewBinaryFile, &QPushButton::clicked, this, [&]() {
-    QString filename(QFileDialog::getOpenFileName(this, "Open File", ".",
+    QString filename(QFileDialog::getOpenFileName(this, "Open File", QDir::currentPath(),
                                                   "bin files (*.bin)"));
-    _binaryViewPopup->setData(test::Data(filename).toJson());
-    _binaryViewPopup->exec();
+    if(!filename.isEmpty()){
+        _binaryViewPopup->setData(test::Data(filename).toJson());
+        _binaryViewPopup->exec();
+    }
   });
 }
 
