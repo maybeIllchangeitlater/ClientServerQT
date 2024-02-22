@@ -19,7 +19,7 @@ void Client::connectToServer(unsigned short port, const QString &host) {
 void Client::closeSession() {
     auto request = _requestGenerator.closeSessionRequest();
     QNetworkReply *reply = _manager.deleteResource(request);
-    reply->deleteLater(); //reply not important here
+    reply->deleteLater();
 }
 
 template<typename T, typename Handler>
@@ -44,7 +44,7 @@ void Client::getView() {
 
 void Client::startPingingServer() {
   connect(&_pingTimer, &QTimer::timeout, this, &Client::pingServer);
-  _pingTimer.start(5000);
+  _pingTimer.start(PING_DELAY);
 }
 
 void Client::pingServer() {
@@ -78,7 +78,7 @@ void Client::handlePingReplyFinished() {
         emit postedByClient(reply->errorString());
     }
 
-    if (_pingCounter.load() == 3) {
+    if (_pingCounter.load() == REQUESTS_PER_SESSION) {
         closeSession();
     }
     reply->deleteLater();

@@ -1,7 +1,7 @@
-#ifndef VIEWSHOWPOPUP_H
-#define VIEWSHOWPOPUP_H
+#ifndef CLIENTSERVERQT_CLIENT_VIEW_VIEWSHOWPOPUP_H_
+#define CLIENTSERVERQT_CLIENT_VIEW_VIEWSHOWPOPUP_H_
 
-#include <QCloseEvent>
+#include <memory>
 #include <QDialog>
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -12,7 +12,9 @@
 namespace Ui {
 class ViewShowPopup;
 }
-
+/**
+ * @brief The ViewShowPopup class предоставляющий функциональность всплывающего окна для просмотра view
+ */
 class ViewShowPopup : public QDialog
 {
     Q_OBJECT
@@ -20,14 +22,16 @@ class ViewShowPopup : public QDialog
 public:
     explicit ViewShowPopup(QWidget *parent = nullptr);
     ~ViewShowPopup();
-
+    /**
+     * @brief setView установить view
+     * @param jsonView view пришедшее в виде json переведенного в QByteArray
+     */
     void setView(const QByteArray &jsonView);
 
-protected:
- void closeEvent(QCloseEvent *event) override;
 
 private:
+    std::unique_ptr<QStandardItemModel> _model = std::make_unique<QStandardItemModel>();
     Ui::ViewShowPopup *ui;
 };
 
-#endif // VIEWSHOWPOPUP_H
+#endif // CLIENTSERVERQT_CLIENT_VIEW_VIEWSHOWPOPUP_H_

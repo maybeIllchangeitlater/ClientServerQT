@@ -23,6 +23,8 @@ namespace test {
  */
 class Client : public QObject {
   Q_OBJECT
+ constexpr static const size_t PING_DELAY = 60000; //1 минута
+ constexpr static const int8_t REQUESTS_PER_SESSION = 3;
  public:
   /**
    * @brief Client создает объект клиента, который пытается подключится к

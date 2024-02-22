@@ -29,6 +29,9 @@ set(PROJECT_SOURCES
         view/viewShowPopup.h
         view/viewShowPopup.cpp
         view/viewShowPopup.ui
+        view/binaryViewPopup.h
+        view/binaryViewPopup.cpp
+        view/binaryViewPopup.ui
         client/client.h
         client/client.cpp
         ../common/randomStringGenerator.h
