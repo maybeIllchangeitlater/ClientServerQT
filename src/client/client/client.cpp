@@ -64,6 +64,10 @@ void Client::pingServer() {
          http::RequestGenerator::ConnectionStatus::KEEP_ALIVE);
 }
 
+void Client::postString(QString string){
+    post(string, &Client::handlePostReplyFinished);
+}
+
 void Client::handlePingReplyFinished() {
     _pingCounter.fetch_add(1);
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
@@ -130,6 +134,10 @@ void Client::handleGetViewFinished() {
         qDebug() << reply->errorString();
     }
     reply->deleteLater();
+}
+
+QString Client::generateRandomString() {
+    return _randomStringGenerator->generateNumCharString();
 }
 
 }  // namespace test

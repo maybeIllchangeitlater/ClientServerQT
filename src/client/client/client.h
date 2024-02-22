@@ -56,8 +56,17 @@ class Client : public QObject {
      * @brief getView отправляет GET view запрос на сервер
      */
     void getView();
+    /**
+     * @brief generateRandomString производит случайную строку
+     * @return случайно сгенерированную строку
+     */
+    QString generateRandomString();
 
  public slots:
+    /**
+     * @brief postString from view
+     */
+    void postString(QString string);
     /**
    * @brief handlePingReplyFinished обрабатывает ответ пингов к серверу
    */

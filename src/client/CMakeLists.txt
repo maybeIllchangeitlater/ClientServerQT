@@ -17,9 +17,12 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Network)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        view/mainwindow.cpp
+        view/mainwindow.h
+        view/mainwindow.ui
+        view/stringGenerationPopup.h
+        view/stringGenerationPopup.cpp
+        view/stringGenerationPopup.ui
         client/client.h
         client/client.cpp
         ../common/randomStringGenerator.h
@@ -29,6 +32,7 @@ set(PROJECT_SOURCES
         ../common/constants/jsonNames.h
         utility/requestGenerator.h
         ../common/data.h
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
